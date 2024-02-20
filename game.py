@@ -30,7 +30,7 @@ o------ooo--------o---xxxxxxo
 o--->xxoo-----xxxxo---xxxxxxo
 o------ooxxx<-----o---xxxxxxo
 oxx<---oo-------xxo---xxxxxxo
-o------oo---------o---xxxxxxo
+o-----------------o---xxxxxxo
 o--->xxooxxxxxxx<-o---xxxxxxo
 o------oo---------o---xxxxxxo
 oxxxxxxoo-xxxxxxxxo---xxxxxxo
@@ -56,7 +56,7 @@ player_img = pygame.image.load('perso2.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
-player_rect = pygame.Rect(50, 50, 5, 13)
+player_rect = pygame.Rect(25, 25, 30, 40)
 
 
 def collision_test(rect, tiles):
@@ -137,11 +137,11 @@ while loop:
     # Flip the player image when goes to the left
     if stay_right:
         display.blit(
-            player_img, (player_rect.x, player_rect.y-25))
+            player_img, (player_rect.x, player_rect.y))
     else:
         display.blit(
             pygame.transform.flip(player_img, 1, 0),
-            (player_rect.x, player_rect.y-25))
+            (player_rect.x, player_rect.y))
 
     for event in pygame.event.get():
         if event.type == QUIT:
