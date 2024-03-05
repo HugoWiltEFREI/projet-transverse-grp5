@@ -29,11 +29,13 @@ air_timer = 0
 grassimage = pygame.image.load("grassMid.png")
 grasscenter = pygame.image.load("grassCenter.png")
 
+scroll = [0,0]
+
 game_map1 = """
 ------------------------------
 ------------------------------
 o------ooo--------o-----------
-x---oooxx-----oooox-----------
+x---oooxx--------ox-----------
 x------xxoooo-----x-----------
 xooo---xx-------oox-----------
 x-----------------x-----------
@@ -51,7 +53,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 game_map = [list(lst) for lst in game_map1]
 bow = pygame.image.load("bow.png")
-spike = pygame.image.load("spikes.png")
+spike = pygame.image.load("spike.png")
 
 
 tl = {}
@@ -116,23 +118,40 @@ def life_left(nombre_de_vie):
         screen.blit(coeur, (1500+i*80, 50))
         i+=1
 
-
+game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
+text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
 
 
 def spike_level(level):
     if level == 1:
-        display.blit(spike, (1085, 850))
-        display.blit(spike, (750, 850))
+        display.blit(spike, (1085 - scroll[0], 850 - scroll[1]))
+        display.blit(spike, (750 - scroll[0], 850 - scroll[1]))
     if level ==2:
-        display.blit(spike, (985, 465))
-        display.blit(spike, (750, 465))
+        display.blit(spike, (985 - scroll[0], 465 - scroll[1]))
+        display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
 
+display_dead = 0
 derniereaction = 0
+
 loop = 1
+
+
+def is_dead():
+    global display_dead, nombre_de_vie
+    if nombre_de_vie <= 0:
+        display_dead = 1
+        if event.type == KEYDOWN:
+            if event.key == K_r:
+                nombre_de_vie = 3
+                display_dead = 0
+
 while loop:
     # CLEAR THE SCREEN
     display.fill((146, 244, 255))
+
+    scroll[0] += int((player_rect.x - scroll[0] - 500)/20)
+    scroll[1] += (player_rect.y - scroll[1] - 400)
 
     # Tiles are blitted  ==========================
     tile_rects = []
@@ -143,7 +162,7 @@ while loop:
             if symbol in tl:
                 # draw the symbol for image
                 display.blit(
-                    tl[symbol], (x * 64, y * 64))
+                    tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             # draw a rectangle for every symbol except for the empty one
             if symbol != "-" and symbol != "O":
                 tile_rects.append(pygame.Rect(x * 64, y * 64, 64, 64))
@@ -170,15 +189,17 @@ while loop:
         momentum = 0
     else:
         air_timer += 1
+    if collisions["top"]:
+        momentum = 0
 
     # Flip the player image when goes to the left
     if stay_right:
         display.blit(
-            player_img, (player_rect.x, player_rect.y))
+            player_img, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
     else:
         display.blit(
             pygame.transform.flip(player_img, 1, 0),
-            (player_rect.x, player_rect.y))
+            (player_rect.x - scroll[0], player_rect.y - scroll[1]))
 
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and affichage==1:
@@ -192,8 +213,9 @@ while loop:
             nombre_de_vie -=1
             derniereaction = now
 
-    now = pygame.time.get_ticks()
 
+
+    now = pygame.time.get_ticks()
 
     cpteur = game_font.render(str(cpt), False, "brown")
 
@@ -209,6 +231,9 @@ while loop:
         if pygame.mouse.get_pressed()[0] == True:
             x, y = pygame.mouse.get_pos()
             print(x, y)
+
+        is_dead()
+
 
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
@@ -231,7 +256,9 @@ while loop:
     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
     screen.blit(cpteur, (30,30))
     if affichage != 0:
-        screen.blit(bow, (465, 465))
+        screen.blit(bow, (465 - scroll[0], 465 - scroll[1]))
+    if display_dead !=0:
+        screen.blit(text2, (400, 300))
     life_left(nombre_de_vie)
     pygame.display.update()
     clock.tick(60)
