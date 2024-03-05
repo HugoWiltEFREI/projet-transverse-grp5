@@ -53,7 +53,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 game_map = [list(lst) for lst in game_map1]
 bow = pygame.image.load("bow.png")
-spike = pygame.image.load("spike.png")
+spike = pygame.image.load("dirt.jpg")
 
 
 tl = {}
@@ -121,11 +121,11 @@ def life_left(nombre_de_vie):
 
 def spike_level(level):
     if level == 1:
-        display.blit(spike, (1085 - scroll[0], 850 - scroll[1]))
-        display.blit(spike, (750 - scroll[0], 850 - scroll[1]))
+        display.blit(spike, (1085 - scroll[0], 850 ))
+        display.blit(spike, (750 - scroll[0], 850 ))
     if level ==2:
-        display.blit(spike, (985 - scroll[0], 465 - scroll[1]))
-        display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
+        display.blit(spike, (985 - scroll[0], 465 ))
+        display.blit(spike, (750 - scroll[0], 465 ))
 
 derniereaction = 0
 loop = 1
@@ -134,7 +134,7 @@ while loop:
     display.fill((146, 244, 255))
 
     scroll[0] += int((player_rect.x - scroll[0] - 500)/20)
-    scroll[1] += (player_rect.y - scroll[1] - 400)
+    scroll[1] += (player_rect.y  - 400)
 
     # Tiles are blitted  ==========================
     tile_rects = []
@@ -145,7 +145,7 @@ while loop:
             if symbol in tl:
                 # draw the symbol for image
                 display.blit(
-                    tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
+                    tl[symbol], (x * 64 - scroll[0], y * 64 ))
             # draw a rectangle for every symbol except for the empty one
             if symbol != "-" and symbol != "O":
                 tile_rects.append(pygame.Rect(x * 64, y * 64, 64, 64))
@@ -178,11 +178,11 @@ while loop:
     # Flip the player image when goes to the left
     if stay_right:
         display.blit(
-            player_img, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
+            player_img, (player_rect.x - scroll[0], player_rect.y ))
     else:
         display.blit(
             pygame.transform.flip(player_img, 1, 0),
-            (player_rect.x - scroll[0], player_rect.y - scroll[1]))
+            (player_rect.x - scroll[0], player_rect.y ))
 
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and affichage==1:
@@ -235,7 +235,7 @@ while loop:
     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
     screen.blit(cpteur, (30,30))
     if affichage != 0:
-        screen.blit(bow, (465 - scroll[0], 465 - scroll[1]))
+        screen.blit(bow, (465 - scroll[0], 465))
     life_left(nombre_de_vie)
     pygame.display.update()
     clock.tick(60)
