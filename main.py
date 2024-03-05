@@ -2,6 +2,57 @@ import pygame, time
 from math import sqrt
 from pygame.locals import *
 
+def move(rect, movement, tiles):
+    collision_types = {
+        'top': False, 'bottom': False, 'right': False, 'left': False}
+    rect.x += movement[0]
+    hit_list = collision_test(rect, tiles)
+    for tile in hit_list:
+        if movement[0] > 0:
+            rect.right = tile.left
+            collision_types['right'] = True
+        elif movement[0] < 0:
+            rect.left = tile.right
+            collision_types['left'] = True
+    rect.y += movement[1]
+    hit_list = collision_test(rect, tiles)
+    for tile in hit_list:
+        if movement[1] > 0:
+            rect.bottom = tile.top
+            collision_types['bottom'] = True
+        elif movement[1] < 0:
+            rect.top = tile.bottom
+            collision_types['top'] = True
+    return rect, collision_types
+
+def isinzone(x1, x2, x3, y1,y2,y3):
+    if (x1<x2<x3) and (y1<y2<y3):
+        return 1
+    else:
+        return 0
+
+def collision_test(rect, tiles):
+    "Returns the Rect of the tile with which the player collides"
+    hit_list = []
+    for tile in tiles:
+        if rect.colliderect(tile):
+            hit_list.append(tile)
+    return hit_list
+
+def spike_level(level):
+    if level == 1:
+        display.blit(spike, (1085, 850))
+        display.blit(spike, (750, 850))
+    if level ==2:
+        display.blit(spike, (985, 465))
+        display.blit(spike, (750, 465))
+
+def life_left(nombre_de_vie):
+    i = 0
+    while i<nombre_de_vie:
+        screen.blit(coeur, (1500+i*80, 50))
+        i+=1
+
 
 pygame.init()
 
@@ -54,11 +105,7 @@ bow = pygame.image.load("bow.png")
 spike = pygame.image.load("spikes.png")
 
 
-tl = {}
-tl["o"] = grassimage
-tl["x"] = grasscenter
-tl["O"] = bow
-
+tl = {"o" : grassimage,"x" : grasscenter,"O" : bow }
 
 player_img = pygame.image.load('perso2.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
@@ -67,66 +114,14 @@ player_img.set_colorkey((255, 255, 255))
 player_rect = pygame.Rect(25, 25, 30, 40)
 
 
-def collision_test(rect, tiles):
-    "Returns the Rect of the tile with which the player collides"
-    hit_list = []
-    for tile in tiles:
-        if rect.colliderect(tile):
-            hit_list.append(tile)
-    return hit_list
-
-
-def move(rect, movement, tiles):
-    collision_types = {
-        'top': False, 'bottom': False, 'right': False, 'left': False}
-    rect.x += movement[0]
-    hit_list = collision_test(rect, tiles)
-    for tile in hit_list:
-        if movement[0] > 0:
-            rect.right = tile.left
-            collision_types['right'] = True
-        elif movement[0] < 0:
-            rect.left = tile.right
-            collision_types['left'] = True
-    rect.y += movement[1]
-    hit_list = collision_test(rect, tiles)
-    for tile in hit_list:
-        if movement[1] > 0:
-            rect.bottom = tile.top
-            collision_types['bottom'] = True
-        elif movement[1] < 0:
-            rect.top = tile.bottom
-            collision_types['top'] = True
-    return rect, collision_types
-
-def isinzone(x1, x2, x3, y1,y2,y3):
-    if (x1<x2<x3) and (y1<y2<y3):
-        return 1
-    else:
-        return 0
 level = 2
 
 coeur = pygame.image.load("hud_heartFull.png")
 nombre_de_vie = 3
 
 now = 0
-def life_left(nombre_de_vie):
-    i = 0
-    while i<nombre_de_vie:
-        screen.blit(coeur, (1500+i*80, 50))
-        i+=1
 
 
-
-
-
-def spike_level(level):
-    if level == 1:
-        display.blit(spike, (1085, 850))
-        display.blit(spike, (750, 850))
-    if level ==2:
-        display.blit(spike, (985, 465))
-        display.blit(spike, (750, 465))
 
 derniereaction = 0
 loop = 1
