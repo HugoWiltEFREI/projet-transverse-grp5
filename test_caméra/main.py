@@ -1,14 +1,14 @@
 import pygame, time
 from math import sqrt
 from pygame.locals import *
-
+import equations
 
 pygame.init()
 
 clock = pygame.time.Clock()
 
 pygame.display.set_caption('Game')
-game_font = pygame.font.Font("../../../../../../../Downloads/VT323-Regular.ttf", int(100))
+game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
 text = game_font.render("PRESS E", False, "brown")
 cpt = ""
 affichage = 1
@@ -129,6 +129,7 @@ def spike_level(level):
 
 derniereaction = 0
 loop = 1
+
 while loop:
     # CLEAR THE SCREEN
     display.fill((146, 244, 255))
@@ -155,6 +156,11 @@ while loop:
     spike_level(level)
 
     # MOVEMENT OF THE PLAYER
+
+    momentax = 10
+
+    gravite: float = 9.81
+
     player_movement = [0, 0]
     if moving_right:
         player_movement[0] += 6
@@ -162,8 +168,8 @@ while loop:
         player_movement[0] -= 6
     player_movement[1] += momentum
     momentum += 0.3
-    if momentum > 3:
-        momentum = 3
+    if momentum > 10:
+        momentum = momentum+0.2*gravite
 
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
 
@@ -172,8 +178,10 @@ while loop:
         momentum = 0
     else:
         air_timer += 1
-    if collisions["top"]:
-        momentum = 0
+        # while collisions['bottom'] == False: #problème ici essayer d'enlever le while
+        #     momentum = 0.2*gravite
+
+
 
     # Flip the player image when goes to the left
     if stay_right:
@@ -198,6 +206,7 @@ while loop:
 
     now = pygame.time.get_ticks()
 
+    print(now)
 
     cpteur = game_font.render(str(cpt), False, "brown")
 
