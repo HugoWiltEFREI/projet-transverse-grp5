@@ -73,7 +73,7 @@ tl["o"] = grassimage
 tl["x"] = grasscenter
 
 
-player_img = pygame.image.load('perso2.png')
+player_img = pygame.image.load('perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
