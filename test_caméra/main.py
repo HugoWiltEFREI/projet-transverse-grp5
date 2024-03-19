@@ -64,7 +64,7 @@ xxxxoooooooooooooxooooooooooxoooooooooox--oooooooxoooooooooo-----------------ooo
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
 """.splitlines()
 
-game_map = [list(lst) for lst in game_map2]
+game_map = [list(lst) for lst in game_map1]
 bow = pygame.image.load("bow.png")
 spike = pygame.image.load("spike.png")
 
@@ -152,7 +152,7 @@ while loop:
 
     if player_rect.x > 947:
         scroll[0] += int(player_rect.x - scroll[0] - 947)
-    if player_rect.y < 150:
+    if player_rect.y > 0 and player_rect.y < 550:
         scroll[1] += (player_rect.y - scroll[1] - 540)
 
     # Tiles are blitted  ==========================
