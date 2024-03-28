@@ -114,6 +114,7 @@ player_img = pygame.image.load('perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
+
 player_rect = pygame.Rect(25, 25, 30, 40)
 
 nombre_de_vie = 3
