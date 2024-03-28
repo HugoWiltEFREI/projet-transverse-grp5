@@ -135,6 +135,12 @@ def life_left(nombre_de_vie):
         screen.blit(coeur, (1500 + i * 80, 50))
         i += 1
 
+def diedFromVoid(posY):
+    global nombre_de_vie
+    if (posY>1000):
+        nombre_de_vie = 0
+
+
 def spike_level(level):
     if level == 1:
         display.blit(spike, (1085 - scroll[0], 850 - scroll[1]))
@@ -157,6 +163,9 @@ def is_dead():
                 player_rect.y = 10
                 player_velocity_multi = 1
                 scroll[0], scroll[1] = 0, 0
+
+def level_actions(level):
+    spike_level(level)
 
 
 while loop:
@@ -247,6 +256,7 @@ while loop:
             print(x, y)
 
         is_dead()
+        diedFromVoid(player_rect.y)
 
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
