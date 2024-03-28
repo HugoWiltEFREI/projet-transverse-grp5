@@ -27,7 +27,7 @@ air_timer = 0
 grassimage = pygame.image.load("grassMid.png")
 grasscenter = pygame.image.load("grassCenter.png")
 
-scroll = [0,0]
+scroll = [0, 0]
 
 game_map2 = """
 ------------------------------
@@ -57,8 +57,8 @@ game_map1 = """
 -------------------------------------------------------------------------------------------------0------------------
 ooo----------------------------------------------------------------------------------------------0------------------
 xxxo------------------oooooo---------------------------------------------------------------------0------------------
-xxxxo--------------o----------o-----------------------------------------oooooooo-----------------0------------------
-xxxxxoooooooooooooox----------x----------o---------o------------oooo-------------------oooo------0------------------
+xxxxooooooooooooooo----------o-----------------------------------------oooooooo-----------------0------------------
+xxxxxxxxxxxxxxxxxxxo----------x----------o---------o------------oooo-------------------oooo------0------------------
 xxxxxxxxxxxxxxxxxxxxooooooooooxoooooooooox--oooooooxoooooooooo-----------------ooo------------ooo0------------------
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
 """.splitlines()
@@ -67,11 +67,7 @@ game_map = [list(lst) for lst in game_map1]
 bow = pygame.image.load("bow.png")
 spike = pygame.image.load("spike.png")
 
-
-tl = {}
-tl["o"] = grassimage
-tl["x"] = grasscenter
-
+tl = {"o": grassimage, "x": grasscenter}
 
 player_img = pygame.image.load('perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
@@ -79,15 +75,28 @@ player_img.set_colorkey((255, 255, 255))
 
 player_rect = pygame.Rect(25, 25, 30, 40)
 
+nombre_de_vie = 3
+now = 0
+level = 2
+display_dead = 0
+derniereaction = 0
+
+loop = 1
+player_velocity_multi = 1
+
+
+coeur = pygame.image.load("hud_heartFull.png")
+game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
+text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
+
 
 def collision_test(rect, tiles):
-    "Returns the Rect of the tile with which the player collides"
+    #Return le rect en collision avec le player
     hit_list = []
     for tile in tiles:
         if rect.colliderect(tile):
             hit_list.append(tile)
     return hit_list
-
 
 def move(rect, movement, tiles):
     collision_types = {
@@ -112,41 +121,28 @@ def move(rect, movement, tiles):
             collision_types['top'] = True
     return rect, collision_types
 
-def isinzone(x1, x2, x3, y1,y2,y3):
-    if (x1<x2<x3) and (y1<y2<y3):
+
+def isinzone(x1, x2, x3, y1, y2, y3):
+    if (x1 < x2 < x3) and (y1 < y2 < y3):
         return 1
     else:
         return 0
 
-level = 2
 
-coeur = pygame.image.load("hud_heartFull.png")
-nombre_de_vie = 3
-
-now = 0
 def life_left(nombre_de_vie):
     i = 0
-    while i<nombre_de_vie:
-        screen.blit(coeur, (1500+i*80, 50))
-        i+=1
-
-game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
-text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
-
+    while i < nombre_de_vie:
+        screen.blit(coeur, (1500 + i * 80, 50))
+        i += 1
 
 def spike_level(level):
     if level == 1:
         display.blit(spike, (1085 - scroll[0], 850 - scroll[1]))
         display.blit(spike, (750 - scroll[0], 850 - scroll[1]))
-    if level ==2:
+    if level == 2:
         display.blit(spike, (985 - scroll[0], 465 - scroll[1]))
         display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
 
-display_dead = 0
-derniereaction = 0
-
-loop = 1
-player_velocity_multi = 1
 
 def is_dead():
     global display_dead, nombre_de_vie, player_velocity_multi
@@ -160,7 +156,8 @@ def is_dead():
                 player_rect.x = 10
                 player_rect.y = 10
                 player_velocity_multi = 1
-                scroll[0], scroll[1] = 0,0
+                scroll[0], scroll[1] = 0, 0
+
 
 while loop:
     # CLEAR THE SCREEN
@@ -171,32 +168,32 @@ while loop:
     if player_rect.y < 150:
         scroll[1] += (player_rect.y - scroll[1] - 540)
 
-    # Tiles are blitted  ==========================
+    # Affichage des blocks
     tile_rects = []
     y = 0
     for line_of_symbols in game_map:
         x = 0
         for symbol in line_of_symbols:
             if symbol in tl:
-                # draw the symbol for image
+                # Blit des images avec coords
                 display.blit(
                     tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
-            # draw a rectangle for every symbol except for the empty one
+            # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
                 tile_rects.append(pygame.Rect(x * 64, y * 64, 64, 64))
             x += 1
         y += 1
-    # ================================================
+
     spike_level(level)
 
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
     if moving_right:
-        player_movement[0] += 6*player_velocity_multi
+        player_movement[0] += 6 * player_velocity_multi
     if moving_left:
-        player_movement[0] -= 6*player_velocity_multi
+        player_movement[0] -= 6 * player_velocity_multi
     player_movement[1] += momentum
-    momentum += 0.3*player_velocity_multi
+    momentum += 0.3 * player_velocity_multi
     if momentum > 3:
         momentum = 3
 
@@ -221,17 +218,16 @@ while loop:
                 (player_rect.x - scroll[0], player_rect.y - scroll[1]))
 
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
-    if statut and affichage==1:
+    if statut and affichage == 1:
         display.blit(text, (800, 875))
 
-    isinspike1 = isinzone(725, player_rect.x, 790, 490, player_rect.y+30,510)
-    isinspike2 = isinzone(960, player_rect.x, 1025, 490, player_rect.y+30,510)
+    isinspike1 = isinzone(725, player_rect.x, 790, 490, player_rect.y + 30, 510)
+    isinspike2 = isinzone(960, player_rect.x, 1025, 490, player_rect.y + 30, 510)
 
     if isinspike1 or isinspike2:
         if now - derniereaction > 2000:
-            nombre_de_vie -=1
+            nombre_de_vie -= 1
             derniereaction = now
-
 
     now = pygame.time.get_ticks()
 
@@ -241,17 +237,16 @@ while loop:
         if event.type == QUIT:
             loop = 0
 
-        if (event.type == KEYDOWN) and (statut == 1) and (affichage!=0):
+        if (event.type == KEYDOWN) and (statut == 1) and (affichage != 0):
             if event.key == K_e:
                 zone_de_text = "Bow acquired"
                 affichage = 0
 
-        if pygame.mouse.get_pressed()[0] == True:
+        if pygame.mouse.get_pressed()[0]:
             x, y = pygame.mouse.get_pos()
             print(x, y)
 
         is_dead()
-
 
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
@@ -272,10 +267,10 @@ while loop:
                 moving_left = False
 
     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
-    screen.blit(cpteur, (30,30))
+    screen.blit(cpteur, (30, 30))
     if affichage != 0:
         screen.blit(bow, (465 - scroll[0], 465 - scroll[1]))
-    if display_dead !=0:
+    if display_dead != 0:
         screen.blit(text2, (400, 100))
     life_left(nombre_de_vie)
     pygame.display.update()
