@@ -28,6 +28,9 @@ air_timer = 0
 
 grassimage = pygame.image.load("grassMid.png")
 grasscenter = pygame.image.load("grassCenter.png")
+castleimage = pygame.image.load("castleMid.png")
+castlecenter = pygame.image.load("castleCenter.png")
+water = pygame.image.load("liquidWater.png")
 
 scroll = [0, 0]
 
@@ -45,11 +48,10 @@ xooooooxx-oooooooooo----------
 xxxxxxxxx-----------o---------
 x-----------------------------
 x---------------------o-------
-xooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xoooooooooooooooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 """.splitlines()
+
 
 game_map2 = """
 -----------------------------------------------------------------------------------------------0------------------
@@ -64,7 +66,20 @@ xxxxoooooooooooooxooooooooooxoooooooooox--oooooooxoooooooooo-----------------ooo
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
 """.splitlines()
 
-game_map = [list(lst) for lst in game_map1]
+game_map3 = """
+-----------------------------------------------------------------------------------------------0------------------
+-----------------------------------------------------------------------------------------------0------------------
+-----------------------------------------------------------------------------------------------0------------------
+-----------------------------------------------------------------------------------------------0------------------
+-----------------------------------------------------------------------------------------------0------------------
+-------------------------CCCCC-----------------------------------------------------------------0------------------
+------------------------Cc---cC----------------------------------------------------------------0------------------
+-----------------------Cc-----cC---------------------------------------------------------------0------------------
+CCCCCCCCCCCCCCCCCCCCCCCccCCCCCccCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCwwwwwwwwwwwwwwwwww
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccwwwwwwwwwwwwwwwwww
+""".splitlines()
+
+game_map = [list(lst) for lst in game_map3]
 bow = pygame.image.load("bow.png")
 spike = pygame.image.load("spike.png")
 
@@ -72,13 +87,15 @@ tl = {}
 tl["o"] = grassimage
 tl["x"] = grasscenter
 tl["b"] = bow
+tl["w"] = water
+tl["C"] = castleimage
+tl["c"] = castlecenter
 
 player_img = pygame.image.load('perso2.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
 player_rect = pygame.Rect(25, 25, 30, 40)
-
 
 def collision_test(rect, tiles):
     "Returns the Rect of the tile with which the player collides"
@@ -152,7 +169,7 @@ while loop:
 
     if player_rect.x > 947:
         scroll[0] += int(player_rect.x - scroll[0] - 947)
-    if player_rect.y > 0 and player_rect.y < 550:
+    if player_rect.y < 150:
         scroll[1] += (player_rect.y - scroll[1] - 540)
 
     # Tiles are blitted  ==========================
@@ -173,6 +190,8 @@ while loop:
     # ================================================
     spike_level(level)
 
+    gravite = 9.81
+
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
     if moving_right:
@@ -181,8 +200,8 @@ while loop:
         player_movement[0] -= 6
     player_movement[1] += momentum
     momentum += 0.3
-    if momentum > 3:
-        momentum = 3
+    if momentum > 10:
+        momentum = momentum + 0.2*gravite
 
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
 
