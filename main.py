@@ -1,94 +1,6 @@
 import pygame
 from pygame.locals import *
-
-pygame.init()
-
-clock = pygame.time.Clock()
-
-pygame.display.set_caption('Game')
-game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
-text = game_font.render("PRESS E", False, "brown")
-zone_de_text = ""
-affichage = 1
-
-WINDOW_SIZE = (0, 0)
-# This will be the Surface where we will blit everything
-display = pygame.Surface((1920, 1080))
-# Then we will scale (every frame) the display onto the screen
-screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
-
-moving_right = False
-moving_left = False
-# For the pygame.transform.flip(player_img, 1, 0)
-stay_right = True
-momentum = 0
-air_timer = 0
-
-grassimage = pygame.image.load("grassMid.png")
-grasscenter = pygame.image.load("grassCenter.png")
-
-scroll = [0, 0]
-
-game_map2 = """
-------------------------------
-------------------------------
-o------ooo--------o-----------
-x---oooxx--------ox-----------
-x------xxoooo-----x-----------
-xooo---xx-------oox-----------
-x-----------------x-----------
-x---ooooooooooooo-x-----------
-x------xx---------x-----------
-xooooooxx-oooooooox-----------
-xxxxxxxxx---------------------
-x-----------------------------
-x-----------------------------
-xooooooooooooooooooooooooooooo
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-""".splitlines()
-
-game_map1 = """
--------------------------------------------------------------------------------------------------0------------------
--------------------------------------------------------------------------------------------------0------------------
--------------------------------------------------------------------------------------------------0------------------
--------------------------------------------------------------------------------------------------0------------------
--------------------------------------------------------------------------------------------------0------------------
-ooo----------------------------------------------------------------------------------------------0------------------
-xxxo------------------oooooo---------------------------------------------------------------------0------------------
-xxxxooooooooooooooo----------o-----------------------------------------oooooooo-----------------0------------------
-xxxxxxxxxxxxxxxxxxxo----------x----------o---------o------------oooo-------------------oooo------0------------------
-xxxxxxxxxxxxxxxxxxxxooooooooooxoooooooooox--oooooooxoooooooooo-----------------ooo------------ooo0------------------
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
-""".splitlines()
-
-game_map = [list(lst) for lst in game_map1]
-bow = pygame.image.load("bow.png")
-spike = pygame.image.load("spike.png")
-
-tl = {"o": grassimage, "x": grasscenter}
-
-player_img = pygame.image.load('perso.png')
-player_img = pygame.transform.scale_by(player_img, 0.04)
-player_img.set_colorkey((255, 255, 255))
-
-player_rect = pygame.Rect(25, 25, 30, 40)
-
-nombre_de_vie = 3
-now = 0
-level = 2
-display_dead = 0
-derniereaction = 0
-
-loop = 1
-player_velocity_multi = 1
-
-
-coeur = pygame.image.load("hud_heartFull.png")
-game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
-text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
-
+from levels import *
 
 def collision_test(rect, tiles):
     #Return le rect en collision avec le player
@@ -121,13 +33,11 @@ def move(rect, movement, tiles):
             collision_types['top'] = True
     return rect, collision_types
 
-
 def isinzone(x1, x2, x3, y1, y2, y3):
     if (x1 < x2 < x3) and (y1 < y2 < y3):
         return 1
     else:
         return 0
-
 
 def life_left(nombre_de_vie):
     i = 0
@@ -137,9 +47,8 @@ def life_left(nombre_de_vie):
 
 def diedFromVoid(posY):
     global nombre_de_vie
-    if (posY>1000):
+    if (posY>900):
         nombre_de_vie = 0
-
 
 def spike_level(level):
     if level == 1:
@@ -148,7 +57,6 @@ def spike_level(level):
     if level == 2:
         display.blit(spike, (985 - scroll[0], 465 - scroll[1]))
         display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
-
 
 def is_dead():
     global display_dead, nombre_de_vie, player_velocity_multi
@@ -166,6 +74,63 @@ def is_dead():
 
 def level_actions(level):
     spike_level(level)
+
+
+pygame.init()
+
+clock = pygame.time.Clock()
+
+pygame.display.set_caption('Game')
+game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
+text = game_font.render("PRESS E", False, "brown")
+zone_de_text = ""
+affichage = 1
+
+WINDOW_SIZE = (0, 0)
+# This will be the Surface where we will blit everything
+display = pygame.Surface((1920, 1080))
+# Then we will scale (every frame) the display onto the screen
+screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
+
+moving_right = False
+moving_left = False
+# For the pygame.transform.flip(player_img, 1, 0)
+stay_right = True
+momentum = 0
+air_timer = 0
+
+grassimage = pygame.image.load("grassMid.png")
+grasscenter = pygame.image.load("grassCenter.png")
+
+scroll = [0, 0]
+
+
+bow = pygame.image.load("bow.png")
+spike = pygame.image.load("spike.png")
+
+tl = {"o": grassimage, "x": grasscenter}
+
+player_img = pygame.image.load('perso.png')
+player_img = pygame.transform.scale_by(player_img, 0.04)
+player_img.set_colorkey((255, 255, 255))
+
+player_rect = pygame.Rect(25, 25, 30, 40)
+
+nombre_de_vie = 3
+now = 0
+level = 2
+display_dead = 0
+derniereaction = 0
+
+loop = 1
+player_velocity_multi = 1
+
+
+coeur = pygame.image.load("hud_heartFull.png")
+game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
+text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
+
+
 
 
 while loop:
@@ -261,6 +226,9 @@ while loop:
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 loop = 0
+            if event.key == K_c:
+                print(player_rect.x, player_rect.y)
+
             if event.key == K_RIGHT:
                 moving_right = True
                 stay_right = True
