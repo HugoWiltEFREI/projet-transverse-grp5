@@ -1,6 +1,73 @@
 import pygame
 from pygame.locals import *
 
+def is_dead():
+    global display_dead, nombre_de_vie, player_velocity_multi
+    if nombre_de_vie <= 0:
+        display_dead = 1
+        player_velocity_multi = 0
+        if event.type == KEYDOWN:
+            if event.key == K_r:
+                nombre_de_vie = 3
+                display_dead = 0
+                player_rect.x = 10
+                player_rect.y = 10
+                player_velocity_multi = 1
+                scroll[0], scroll[1] = 0, 0
+
+def collision_test(rect, tiles):
+    #Return le rect en collision avec le player
+    hit_list = []
+    for tile in tiles:
+        if rect.colliderect(tile):
+            hit_list.append(tile)
+    return hit_list
+
+def move(rect, movement, tiles):
+    collision_types = {
+        'top': False, 'bottom': False, 'right': False, 'left': False}
+    rect.x += movement[0]
+    hit_list = collision_test(rect, tiles)
+    for tile in hit_list:
+        if movement[0] > 0:
+            rect.right = tile.left
+            collision_types['right'] = True
+        elif movement[0] < 0:
+            rect.left = tile.right
+            collision_types['left'] = True
+    rect.y += movement[1]
+    hit_list = collision_test(rect, tiles)
+    for tile in hit_list:
+        if movement[1] > 0:
+            rect.bottom = tile.top
+            collision_types['bottom'] = True
+        elif movement[1] < 0:
+            rect.top = tile.bottom
+            collision_types['top'] = True
+    return rect, collision_types
+
+
+def isinzone(x1, x2, x3, y1, y2, y3):
+    if (x1 < x2 < x3) and (y1 < y2 < y3):
+        return 1
+    else:
+        return 0
+
+
+def life_left(nombre_de_vie):
+    i = 0
+    while i < nombre_de_vie:
+        screen.blit(coeur, (1500 + i * 80, 50))
+        i += 1
+
+def spike_level(level):
+    if level == 1:
+        display.blit(spike, (1085 - scroll[0], 850 - scroll[1]))
+        display.blit(spike, (750 - scroll[0], 850 - scroll[1]))
+    if level == 2:
+        display.blit(spike, (985 - scroll[0], 465 - scroll[1]))
+        display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
+
 pygame.init()
 
 clock = pygame.time.Clock()
@@ -90,73 +157,10 @@ game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
 
-def collision_test(rect, tiles):
-    #Return le rect en collision avec le player
-    hit_list = []
-    for tile in tiles:
-        if rect.colliderect(tile):
-            hit_list.append(tile)
-    return hit_list
-
-def move(rect, movement, tiles):
-    collision_types = {
-        'top': False, 'bottom': False, 'right': False, 'left': False}
-    rect.x += movement[0]
-    hit_list = collision_test(rect, tiles)
-    for tile in hit_list:
-        if movement[0] > 0:
-            rect.right = tile.left
-            collision_types['right'] = True
-        elif movement[0] < 0:
-            rect.left = tile.right
-            collision_types['left'] = True
-    rect.y += movement[1]
-    hit_list = collision_test(rect, tiles)
-    for tile in hit_list:
-        if movement[1] > 0:
-            rect.bottom = tile.top
-            collision_types['bottom'] = True
-        elif movement[1] < 0:
-            rect.top = tile.bottom
-            collision_types['top'] = True
-    return rect, collision_types
 
 
-def isinzone(x1, x2, x3, y1, y2, y3):
-    if (x1 < x2 < x3) and (y1 < y2 < y3):
-        return 1
-    else:
-        return 0
 
 
-def life_left(nombre_de_vie):
-    i = 0
-    while i < nombre_de_vie:
-        screen.blit(coeur, (1500 + i * 80, 50))
-        i += 1
-
-def spike_level(level):
-    if level == 1:
-        display.blit(spike, (1085 - scroll[0], 850 - scroll[1]))
-        display.blit(spike, (750 - scroll[0], 850 - scroll[1]))
-    if level == 2:
-        display.blit(spike, (985 - scroll[0], 465 - scroll[1]))
-        display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
-
-
-def is_dead():
-    global display_dead, nombre_de_vie, player_velocity_multi
-    if nombre_de_vie <= 0:
-        display_dead = 1
-        player_velocity_multi = 0
-        if event.type == KEYDOWN:
-            if event.key == K_r:
-                nombre_de_vie = 3
-                display_dead = 0
-                player_rect.x = 10
-                player_rect.y = 10
-                player_velocity_multi = 1
-                scroll[0], scroll[1] = 0, 0
 
 
 while loop:
@@ -277,3 +281,4 @@ while loop:
     clock.tick(60)
 
 pygame.quit()
+
