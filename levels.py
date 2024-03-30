@@ -32,4 +32,3 @@ xxxxxxxxxxxxxxxxxxxxooooooooooxoooooooooox--oooooooxoooooooooo-----------------o
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
 """.splitlines()
 
-game_map = [list(lst) for lst in game_map1]
