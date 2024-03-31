@@ -1,9 +1,7 @@
-import pygame, time
-from math import sqrt
+import pygame
 from pygame.locals import *
 
 pygame.init()
-
 clock = pygame.time.Clock()
 
 pygame.display.set_caption('Game')
@@ -11,7 +9,6 @@ game_font = pygame.font.Font("../../../../../../../Downloads/VT323-Regular.ttf",
 text = game_font.render("PRESS E", False, "brown")
 cpt = ""
 affichage = 1
-
 
 WINDOW_SIZE = (0, 0)
 # This will be the Surface where we will blit everything
@@ -51,7 +48,6 @@ x---------------------o-------
 xoooooooooooooooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 """.splitlines()
-
 
 game_map2 = """
 -----------------------------------------------------------------------------------------------0------------------
@@ -96,6 +92,7 @@ player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
 player_rect = pygame.Rect(25, 25, 30, 40)
+
 
 def collision_test(rect, tiles):
     "Returns the Rect of the tile with which the player collides"
@@ -201,7 +198,7 @@ while loop:
     player_movement[1] += momentum
     momentum += 0.3
     if momentum > 10:
-        momentum = momentum + 0.2*gravite
+        momentum = momentum + 0.2 * gravite
 
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
 
@@ -234,11 +231,9 @@ while loop:
             nombre_de_vie -= 1
             derniereaction = now
 
-
     now = pygame.time.get_ticks()
 
     cpteur = game_font.render(str(cpt), False, "brown")
-
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -269,7 +264,6 @@ while loop:
                 moving_right = False
             if event.key == K_LEFT:
                 moving_left = False
-
 
     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
     screen.blit(cpteur, (30, 30))
