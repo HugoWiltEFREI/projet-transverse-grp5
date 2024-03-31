@@ -2,12 +2,13 @@ import pygame
 from pygame.locals import *
 
 pygame.init()
+
 clock = pygame.time.Clock()
 
 pygame.display.set_caption('Game')
-game_font = pygame.font.Font("../../../../../../../Downloads/VT323-Regular.ttf", int(100))
+game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
 text = game_font.render("PRESS E", False, "brown")
-cpt = ""
+zone_de_text = ""
 affichage = 1
 
 WINDOW_SIZE = (0, 0)
@@ -35,31 +36,34 @@ game_map1 = """
 ------------------------------
 ------------------------------
 o------ooo--------o-----------
-x---oooxx-----oooox-----------
+x---oooxx--------ox-----------
 x------xxoooo-----x-----------
 xooo---xx-------oox-----------
 x-----------------x-----------
 x---ooooooooooooo-x-----------
-x------xx---------------------
-xooooooxx-oooooooooo----------
-xxxxxxxxx-----------o---------
+x------xx---------x-----------
+xooooooxx-oooooooox-----------
+xxxxxxxxx---------------------
 x-----------------------------
-x---------------------o-------
-xoooooooooooooooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x-----------------------------
+xooooooooooooooooooooooooooooo
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 """.splitlines()
 
 game_map2 = """
------------------------------------------------------------------------------------------------0------------------
------------------------------------------------------------------------------------------------0------------------
------------------------------------------------------------------------------------------------0------------------
------------------------------------------------------------------------------------------------0------------------
-o----------------------------------------------------------------------------------------------0------------------
-xo------------------oooooo---------------------------------------------------------------------0------------------
-xxo--------------o----------o-----------------------------------------oooooooo---------------b-0------------------
-xxxo-------------x----------x----------o---------o------------oooo-------------------oooo------0------------------
-xxxxoooooooooooooxooooooooooxoooooooooox--oooooooxoooooooooo-----------------ooo------------ooo0------------------
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
+-------------------------------------------------------------------------------------------------0------------------
+-------------------------------------------------------------------------------------------------0------------------
+-------------------------------------------------------------------------------------------------0------------------
+-------------------------------------------------------------------------------------------------0------------------
+-------------------------------------------------------------------------------------------------0------------------
+ooo----------------------------------------------------------------------------------------------0------------------
+xxxo------------------oooooo---------------------------------------------------------------------0------------------
+xxxxooooooooooooooo----------o-----------------------------------------oooooooo-----------------0------------------
+xxxxxxxxxxxxxxxxxxxo----------x----------o---------o------------oooo-------------------oooo------0------------------
+xxxxxxxxxxxxxxxxxxxxooooooooooxoooooooooox--oooooooxoooooooooo-----------------ooo------------ooo0------------------
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
 """.splitlines()
 
 game_map3 = """
@@ -75,17 +79,11 @@ CCCCCCCCCCCCCCCCCCCCCCCccCCCCCccCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccwwwwwwwwwwwwwwwwww
 """.splitlines()
 
-game_map = [list(lst) for lst in game_map3]
+
 bow = pygame.image.load("bow.png")
 spike = pygame.image.load("spike.png")
 
-tl = {}
-tl["o"] = grassimage
-tl["x"] = grasscenter
-tl["b"] = bow
-tl["w"] = water
-tl["C"] = castleimage
-tl["c"] = castlecenter
+tl = {"o": grassimage, "x": grasscenter, 'w': water, 'C': castleimage, 'c': castlecenter}
 
 player_img = pygame.image.load('perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
@@ -93,9 +91,30 @@ player_img.set_colorkey((255, 255, 255))
 
 player_rect = pygame.Rect(25, 25, 30, 40)
 
+level_info = [{"ind": "1", "map": game_map1, "pos_initiale_x": 0, "pos_initiale_y": 320},
+              {"ind": "2", "map": game_map2, "pos_initiale_x": 25, "pos_initiale_y": 344}]
+
+nombre_de_vie = 3
+now = 0
+level = level_info[1]
+display_dead = 0
+derniereaction = 0
+
+game_map = [list(lst) for lst in level["map"]]
+
+player_rect.x = level["pos_initiale_x"]
+player_rect.y = level["pos_initiale_y"]
+
+loop = 1
+player_velocity_multi = 1
+
+coeur = pygame.image.load("hud_heartFull.png")
+game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
+text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
+
 
 def collision_test(rect, tiles):
-    "Returns the Rect of the tile with which the player collides"
+    # Return le rect en collision avec le player
     hit_list = []
     for tile in tiles:
         if rect.colliderect(tile):
@@ -134,14 +153,6 @@ def isinzone(x1, x2, x3, y1, y2, y3):
         return 0
 
 
-level = 2
-
-coeur = pygame.image.load("hud_heartFull.png")
-nombre_de_vie = 3
-
-now = 0
-
-
 def life_left(nombre_de_vie):
     i = 0
     while i < nombre_de_vie:
@@ -150,55 +161,68 @@ def life_left(nombre_de_vie):
 
 
 def spike_level(level):
-    if level == 1:
+    if level["ind"] == 1:
         display.blit(spike, (1085 - scroll[0], 850 - scroll[1]))
         display.blit(spike, (750 - scroll[0], 850 - scroll[1]))
-    if level == 2:
+    if level["ind"] == 2:
         display.blit(spike, (985 - scroll[0], 465 - scroll[1]))
         display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
 
 
-derniereaction = 0
-loop = 1
+def is_dead():
+    global display_dead, nombre_de_vie, player_velocity_multi
+    if nombre_de_vie <= 0:
+        display_dead = 1
+        player_velocity_multi = 0
+        if event.type == KEYDOWN:
+            if event.key == K_r:
+                nombre_de_vie = 3
+                display_dead = 0
+                player_rect.x = 10
+                player_rect.y = 10
+                player_velocity_multi = 1
+                scroll[0], scroll[1] = 0, 0
+
+
 while loop:
     # CLEAR THE SCREEN
     display.fill((146, 244, 255))
 
-    if player_rect.x > 947:
-        scroll[0] += int(player_rect.x - scroll[0] - 947)
-    if player_rect.y < 150:
+    if player_rect.x > 950:
+        scroll[0] += int(player_rect.x - scroll[0] - 950)
+    """if player_rect.y > level["pos_initiale_y"]:
         scroll[1] += (player_rect.y - scroll[1] - 540)
+    else:"""
+    scroll[1] = -level["pos_initiale_y"]
 
-    # Tiles are blitted  ==========================
+    # Affichage des blocks
     tile_rects = []
     y = 0
     for line_of_symbols in game_map:
         x = 0
         for symbol in line_of_symbols:
             if symbol in tl:
-                # draw the symbol for image
+                # Blit des images avec coords
                 display.blit(
                     tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
-            # draw a rectangle for every symbol except for the empty one
+            # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
                 tile_rects.append(pygame.Rect(x * 64, y * 64, 64, 64))
             x += 1
         y += 1
-    # ================================================
-    spike_level(level)
 
-    gravite = 9.81
+    spike_level(level)
 
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
     if moving_right:
-        player_movement[0] += 6
+        player_movement[0] += 6 * player_velocity_multi
     if moving_left:
-        player_movement[0] -= 6
+        player_movement[0] -= 6 * player_velocity_multi
     player_movement[1] += momentum
-    momentum += 0.3
-    if momentum > 10:
-        momentum = momentum + 0.2 * gravite
+    momentum += 0.3 * player_velocity_multi
+    if momentum > 3:
+        momentum = 3
 
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
 
@@ -211,13 +235,14 @@ while loop:
         momentum = 0
 
     # Flip the player image when goes to the left
-    if stay_right:
-        display.blit(
-            player_img, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
-    else:
-        display.blit(
-            pygame.transform.flip(player_img, 1, 0),
-            (player_rect.x - scroll[0], player_rect.y - scroll[1]))
+    if player_velocity_multi == 1:
+        if stay_right:
+            display.blit(
+                player_img, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
+        else:
+            display.blit(
+                pygame.transform.flip(player_img, 1, 0),
+                (player_rect.x - scroll[0], player_rect.y - scroll[1]))
 
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and affichage == 1:
@@ -233,19 +258,22 @@ while loop:
 
     now = pygame.time.get_ticks()
 
-    cpteur = game_font.render(str(cpt), False, "brown")
+    cpteur = game_font.render(str(zone_de_text), False, "brown")
 
     for event in pygame.event.get():
         if event.type == QUIT:
             loop = 0
+
         if (event.type == KEYDOWN) and (statut == 1) and (affichage != 0):
             if event.key == K_e:
-                cpt = "Bow acquired"
+                zone_de_text = "Bow acquired"
                 affichage = 0
 
-        if pygame.mouse.get_pressed()[0] == True:
+        if pygame.mouse.get_pressed()[0]:
             x, y = pygame.mouse.get_pos()
             print(x, y)
+
+        is_dead()
 
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
@@ -269,8 +297,11 @@ while loop:
     screen.blit(cpteur, (30, 30))
     if affichage != 0:
         screen.blit(bow, (465 - scroll[0], 465 - scroll[1]))
+    if display_dead != 0:
+        screen.blit(text2, (400, 100))
     life_left(nombre_de_vie)
     pygame.display.update()
     clock.tick(60)
+    print(player_rect.x, player_rect.y)  # 25, 344
 
 pygame.quit()
