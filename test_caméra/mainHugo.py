@@ -91,12 +91,12 @@ player_img.set_colorkey((255, 255, 255))
 
 player_rect = pygame.Rect(25, 25, 30, 40)
 
-level_info = [{"ind": "1", "map": game_map1, "pos_initiale_x": 0, "pos_initiale_y": 320},
+level_info = [{"ind": "1", "map": game_map1, "pos_initiale_x": 0, "pos_initiale_y": 0},
               {"ind": "2", "map": game_map2, "pos_initiale_x": 25, "pos_initiale_y": 344}]
 
 nombre_de_vie = 3
 now = 0
-level = level_info[1]
+level = level_info[0]
 display_dead = 0
 derniereaction = 0
 
@@ -190,10 +190,8 @@ while loop:
 
     if player_rect.x > 950:
         scroll[0] += int(player_rect.x - scroll[0] - 950)
-    """if player_rect.y > level["pos_initiale_y"]:
-        scroll[1] += (player_rect.y - scroll[1] - 540)
-    else:"""
     scroll[1] = -level["pos_initiale_y"]
+
 
     # Affichage des blocks
     tile_rects = []
@@ -302,6 +300,6 @@ while loop:
     life_left(nombre_de_vie)
     pygame.display.update()
     clock.tick(60)
-    print(player_rect.x, player_rect.y)  # 25, 344
+    print(player_rect.x,player_rect.y)
 
 pygame.quit()
