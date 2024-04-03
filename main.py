@@ -1,8 +1,7 @@
 import pygame
 from pygame.locals import *
 
-from functions import move, isinzone, life_left, diedFromVoid, spike_level, is_dead, select_map, display, screen, \
-    scroll, player_rect
+from functions import *
 
 pygame.init()
 clock = pygame.time.Clock()
