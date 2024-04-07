@@ -1,0 +1,62 @@
+{
+     "text_box":
+     {
+         "colours":
+         {
+             "normal_text": "#ADD8E6",
+             "dark_bg": "#032058",
+             "normal_border": "#032058"
+         },
+
+         "misc":
+         {
+             "shadow_width": "0"
+         }
+     },
+     "horizontal_slider":
+     {
+         "colours":
+         {
+            "dark_bg": "#032058",
+            "normal_border": "#c0ffee"
+         }
+     },
+     "horizontal_slider.#sliding_button":
+     {
+         "colours":
+         {
+            "normal_bg": "#C0FFEE"
+         }
+     },
+     "horizontal_slider.#left_button":
+     {
+         "colours":
+         {
+            "normal_bg": "#C0FFEE"
+         }
+     },
+     "horizontal_slider.#right_button":
+     {
+         "colours":
+         {
+            "normal_bg": "#C0FFEE"
+         }
+     },
+     "button":
+     {
+         "colours":
+         {
+             "normal_bg": "#032058",
+             "hovered_bg": "#032058",
+             "active_bg": "#032059",
+             "normal_text": "#c0ffee",
+             "hovered_text": "#FFFFFF"
+         },
+         "font":
+         {
+             "name": "VT323-Regular",
+             "size": "25",
+             "regular_path": "VT323-Regular.ttf"
+         }
+     }
+ }

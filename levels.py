@@ -1,21 +1,14 @@
 game_map2 = """
-------------------------------
-------------------------------
-o------ooo--------o-----------
-x---oooxx--------ox-----------
-x------xxoooo-----x-----------
-xooo---xx-------oox-----------
-x-----------------x-----------
-x---ooooooooooooo-x-----------
-x------xx---------x-----------
-xooooooxx-oooooooox-----------
-xxxxxxxxx---------------------
-x-----------------------------
-x-----------------------------
-xooooooooooooooooooooooooooooo
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+--------------------------------------
+--------------------------------------
+o------ooo--------o-------------------
+x---oooxx--------ox-------------------
+x------xxoooo-----x-------------------
+xooo---xx-------oox-------------------
+x-------------------------------------
+x---oooooooooooooooooooooooo----------
+x------xx-----------------------------
+xooooooxxooooooooooooooooooooooooooooo
 """.splitlines()
 
 game_map1 = """
@@ -31,4 +24,3 @@ xxxxxxxxxxxxxxxxxxxo----------x----------o---------o------------oooo------------
 xxxxxxxxxxxxxxxxxxxxooooooooooxoooooooooox--oooooooxoooooooooo-----------------ooo------------ooo0------------------
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
 """.splitlines()
-

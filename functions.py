@@ -66,12 +66,12 @@ def life_left():
 
 
 def spike_level(level):
-    if level == 2:
-        display.blit(spike, (1085 - scroll[0], 850 - scroll[1]))
-        display.blit(spike, (750 - scroll[0], 850 - scroll[1]))
     if level == 1:
         display.blit(spike, (985 - scroll[0], 465 - scroll[1]))
         display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
+    if level == 2:
+        display.blit(spike, (1110 + 200 - scroll[0], 465 - scroll[1]))
+        display.blit(spike, (875 + 200 - scroll[0], 465 - scroll[1]))
 
 
 def select_map(level):
