@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import KEYDOWN, K_r
 
 import model
-from levels import game_map1, game_map2
+from levels import game_map1, game_map2, game_map3
 
 
 def is_dead(event):
@@ -80,6 +80,8 @@ def select_map(level):
         game_map = [list(lst) for lst in game_map1]
     if level == 2:
         game_map = [list(lst) for lst in game_map2]
+    if level == 3:
+        game_map = [list(lst) for lst in game_map3]
     return game_map
 
 

@@ -24,9 +24,11 @@ music = pygame.mixer.Sound("Rick Astley - Never Gonna Give You Up (Official Musi
 grassimage = pygame.image.load("grassMid.png")
 grasscenter = pygame.image.load("grassCenter.png")
 bow = pygame.image.load("bow.png")
+bluegrass = pygame.image.load("grassCenterBlue.png")
+bluegrassMid = pygame.image.load("grassMidBlue.png")
 darkBlock = pygame.image.load("texture mario underground.png")
 
-tl = {"o": grassimage, "x": grasscenter, 'd':darkBlock}
+tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd':darkBlock}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
@@ -35,7 +37,7 @@ player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
 now = 0
-level = 2
+level = 1
 derniereaction = 0
 
 
@@ -62,10 +64,10 @@ def event_manager():
             if event.key == K_c:
                 print(player_rect.x, player_rect.y)
             if event.key == K_n:
-                if level == 1:
-                    level = 2
+                if level >= 3:
+                    level = 0
                 else:
-                    level = 1
+                    level += 1
             if event.key == K_RIGHT:
                 moving_right = True
                 stay_right = True
@@ -218,7 +220,7 @@ def settings():
             if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
                 if event.ui_element == dropdown:
                     if event.text == "Test1":
-                        scalar = 1
+                        model.number_of_life = 5
                     elif event.text == "Test2":
                         scalar = 0.73
 
