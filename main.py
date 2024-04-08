@@ -24,8 +24,9 @@ music = pygame.mixer.Sound("Rick Astley - Never Gonna Give You Up (Official Musi
 grassimage = pygame.image.load("grassMid.png")
 grasscenter = pygame.image.load("grassCenter.png")
 bow = pygame.image.load("bow.png")
+darkBlock = pygame.image.load("texture mario underground.png")
 
-tl = {"o": grassimage, "x": grasscenter}
+tl = {"o": grassimage, "x": grasscenter, 'd':darkBlock}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
