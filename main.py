@@ -140,9 +140,12 @@ def unnamed():
     if level == 1:
         isinspike1 = isinzone(725, player_rect.x, 790, 490, player_rect.y + 30, 510)
         isinspike2 = isinzone(960, player_rect.x, 1025, 490, player_rect.y + 30, 510)
-    else:
+    if level == 2:
         isinspike1 = isinzone(850 + 200, player_rect.x, 915 + 200, 490, player_rect.y + 30, 510)
         isinspike2 = isinzone(1085 + 200, player_rect.x, 1150 + 200, 490, player_rect.y + 30, 510)
+    else:
+        isinspike1 = False
+        isinspike2 = False
 
     if isinspike1 or isinspike2:
         if now - derniereaction > 2000:
