@@ -225,7 +225,7 @@ def settings():
                     if event.text == "Test1":
                         model.number_of_life = 5
                     elif event.text == "Test2":
-                        scalar = 0.73
+                        scalar = 0.7
 
             manager.process_events(event)
 
