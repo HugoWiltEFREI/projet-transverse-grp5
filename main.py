@@ -25,10 +25,10 @@ grassimage = pygame.image.load("grassMid.png")
 grasscenter = pygame.image.load("grassCenter.png")
 bow = pygame.image.load("bow.png")
 bluegrass = pygame.image.load("grassCenterBlue.png")
-bluegrassMid = pygame.image.load("grassMidBlue.png")
+bluegrassMid = pygame.image.load("grassMiddleBlue.png")
 darkBlock = pygame.image.load("texture mario underground.png")
 
-tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd':darkBlock}
+tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
