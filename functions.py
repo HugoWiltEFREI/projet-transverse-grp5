@@ -98,7 +98,7 @@ def level_actions(level):
 display = pygame.Surface((1920, 1080))
 WINDOW_SIZE = (0, 0)
 screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
-heart = pygame.image.load("hud_heartFull.png")
-spike = pygame.image.load("spike.png")
+heart = pygame.image.load("textures/hud_heartFull.png")
+spike = pygame.image.load("textures/spike.png")
 scroll = [0, 0]
 player_rect = pygame.Rect(25, 25, 30, 40)

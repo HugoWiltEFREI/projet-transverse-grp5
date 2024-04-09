@@ -21,18 +21,18 @@ air_timer = 0
 
 music = pygame.mixer.Sound("Rick Astley - Never Gonna Give You Up (Official Music Video).wav")
 
-grassimage = pygame.image.load("grassMid.png")
-grasscenter = pygame.image.load("grassCenter.png")
-bow = pygame.image.load("bow.png")
-bluegrass = pygame.image.load("grassCenterBlue.png")
-bluegrassMid = pygame.image.load("grassMiddleBlue.png")
-darkBlock = pygame.image.load("texture mario underground.png")
+grassimage = pygame.image.load("textures/grassMid.png")
+grasscenter = pygame.image.load("textures/grassCenter.png")
+bow = pygame.image.load("textures/bow.png")
+bluegrass = pygame.image.load("textures/grassCenterBlue.png")
+bluegrassMid = pygame.image.load("textures/grassMiddleBlue.png")
+darkBlock = pygame.image.load("textures/texture mario underground.png")
 
 tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
-player_img = pygame.image.load('perso.png')
+player_img = pygame.image.load('textures/perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
@@ -172,7 +172,7 @@ def settings():
     game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
     text_font = pygame.font.Font("VT323-Regular.ttf", int(75))
     volume_font = pygame.font.Font("VT323-Regular.ttf", int(25))
-    background = pygame.image.load("Menu-transformed.jpeg")
+    background = pygame.image.load("textures/Menu-transformed.jpeg")
     background = pygame.transform.scale_by(background, 0.63)
 
     manager = pygame_gui.UIManager((int(1800), int(1800)), "settings.json")
@@ -262,7 +262,7 @@ def settings():
 
 
 def menu():
-    background = pygame.image.load("Menu-transformed.jpeg")
+    background = pygame.image.load("textures/Menu-transformed.jpeg")
     background = pygame.transform.scale_by(background, 0.63)
     manager = pygame_gui.UIManager((int(1800), int(1800)), "package.json")
     coffe_zone = pygame.surface.Surface((250, 25))
