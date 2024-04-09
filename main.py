@@ -19,7 +19,7 @@ stay_right = True
 momentum = 0
 air_timer = 0
 
-music = pygame.mixer.Sound("Rick Astley - Never Gonna Give You Up (Official Music Video).wav")
+music = pygame.mixer.Sound("other/Rick Astley - Never Gonna Give You Up (Official Music Video).wav")
 
 grassimage = pygame.image.load("textures/grassMid.png")
 grasscenter = pygame.image.load("textures/grassCenter.png")
@@ -175,7 +175,7 @@ def settings():
     background = pygame.image.load("textures/Menu-transformed.jpeg")
     background = pygame.transform.scale_by(background, 0.63)
 
-    manager = pygame_gui.UIManager((int(1800), int(1800)), "settings.json")
+    manager = pygame_gui.UIManager((int(1800), int(1800)), "other/settings.json")
 
     dropdown = pygame_gui.elements.UIDropDownMenu(["Test1", "Test2", "Test3"], "Test1",
                                                   pygame.Rect((715, 375), (900, 30)), manager)
@@ -264,7 +264,7 @@ def settings():
 def menu():
     background = pygame.image.load("textures/Menu-transformed.jpeg")
     background = pygame.transform.scale_by(background, 0.63)
-    manager = pygame_gui.UIManager((int(1800), int(1800)), "package.json")
+    manager = pygame_gui.UIManager((int(1800), int(1800)), "other/package.json")
     coffe_zone = pygame.surface.Surface((250, 25))
     coffe_zone.fill("#c0ffee")
     zone_for_play = pygame_gui.elements.UIButton(pygame.Rect((850, 300), (280, 75)), "PLAY", manager)
@@ -302,7 +302,7 @@ def menu():
         pygame.display.update()
 
 
-pygame.mixer.music.load('Rick Astley - Never Gonna Give You Up (Official Music Video).wav')
+pygame.mixer.music.load('other/Rick Astley - Never Gonna Give You Up (Official Music Video).wav')
 pygame.mixer.music.play(-1)
 
 is_running = True
