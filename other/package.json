@@ -1,0 +1,21 @@
+{
+     "button":
+     {
+         "colours":
+         {
+             "normal_bg": "#032058",
+             "hovered_bg": "#032059",
+             "active_bg": "#032059",
+             "normal_text": "#c0ffee",
+             "hovered_text": "#FFFFFF"
+         },
+         "font":
+         {
+             "name": "VT323-Regular",
+             "size": "50",
+             "regular_path": "VT323-Regular.ttf"
+
+
+         }
+     }
+ }
