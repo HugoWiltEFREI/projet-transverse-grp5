@@ -4,3 +4,5 @@ display_dead = 0
 val = 0
 show_menu = 1
 loop = 1
+affichage = 1
+air_timer = 0

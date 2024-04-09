@@ -10,14 +10,12 @@ pygame.display.set_caption('Game')
 game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
 text = game_font.render("PRESS E", False, "brown")
 zone_de_text = ""
-affichage = 1
 
 moving_right = False
 moving_left = False
 # For the pygame.transform.flip(player_img, 1, 0)
 stay_right = True
 momentum = 0
-air_timer = 0
 
 music = pygame.mixer.Sound("other/Rick Astley - Never Gonna Give You Up (Official Music Video).wav")
 
@@ -42,15 +40,15 @@ derniereaction = 0
 
 
 def event_manager():
-    global is_running, zone_de_text, affichage, x, y, moving_right, stay_right, moving_left, momentum, level
+    global is_running, zone_de_text, x, y, moving_right, stay_right, moving_left, momentum, level
     for event in pygame.event.get():
         if event.type == QUIT:
             is_running = False
 
-        if (event.type == KEYDOWN) and (statut == 1) and (affichage != 0):
+        if (event.type == KEYDOWN) and (statut == 1) and (model.affichage != 0):
             if event.key == K_e:
                 zone_de_text = "Bow acquired"
-                affichage = 0
+                model.affichage = 0
 
         if pygame.mouse.get_pressed()[0]:
             x, y = pygame.mouse.get_pos()
@@ -75,7 +73,7 @@ def event_manager():
                 moving_left = True
                 stay_right = False
             if event.key == K_SPACE or event.key == K_UP:
-                if air_timer < 3:
+                if model.air_timer < 3:
                     momentum = -9
         if event.type == KEYUP:
             if event.key == K_RIGHT:
@@ -85,7 +83,7 @@ def event_manager():
 
 
 def unnamed():
-    global y, x, momentum, player_rect, air_timer, statut, derniereaction, now
+    global y, x, momentum, player_rect, statut, derniereaction, now
     display.fill((146, 244, 255))
     if player_rect.x > 950:
         scroll[0] += int(player_rect.x - scroll[0] - 950)
@@ -119,10 +117,10 @@ def unnamed():
         momentum = 3
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
     if collisions['bottom']:
-        air_timer = 0
+        model.air_timer = 0
         momentum = 0
     else:
-        air_timer += 1
+        model.air_timer += 1
     if collisions["top"]:
         momentum = 0
     # Flip the player image when goes to the left
@@ -135,7 +133,7 @@ def unnamed():
                 pygame.transform.flip(player_img, 1, 0),
                 (player_rect.x - scroll[0], player_rect.y - scroll[1]))
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
-    if statut and affichage == 1:
+    if statut and model.affichage == 1:
         display.blit(text, (800, 875))
 
     if level == 1:
@@ -159,7 +157,7 @@ def unnamed():
     event_manager()
     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
     screen.blit(cpteur, (30, 30))
-    if affichage != 0:
+    if model.affichage != 0:
         screen.blit(bow, (465 - scroll[0], 465 - scroll[1]))
     if model.display_dead != 0:
         screen.blit(text2, (400, 100))
