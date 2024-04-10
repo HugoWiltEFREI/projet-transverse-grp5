@@ -86,7 +86,7 @@ def select_map(level):
 
 
 def diedFromVoid(posY):
-    if (posY > 900):
+    if posY > 900:
         model.number_of_life = 0
         model.display_dead = 1
 

@@ -7,7 +7,6 @@ loop = 1
 affichage = 1
 zone_de_text = ""
 moving_right = False
-zone_de_text = ""
 moving_left = False
 stay_right = True
 momentum = 0
