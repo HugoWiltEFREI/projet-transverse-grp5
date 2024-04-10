@@ -1,3 +1,4 @@
+import pygame.mixer
 from pygame.locals import *
 
 from functions import *
@@ -18,7 +19,8 @@ stay_right = True
 momentum = 0
 air_timer = 0
 
-music = pygame.mixer.Sound("other/Rick Astley - Never Gonna Give You Up (Official Music Video).wav")
+liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
+               "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav"]
 
 grassimage = pygame.image.load("textures/grassMid.png")
 grasscenter = pygame.image.load("textures/grassCenter.png")
@@ -41,14 +43,14 @@ derniereaction = 0
 
 
 def event_manager():
-    global is_running, zone_de_text, x, y, moving_right, stay_right, moving_left, momentum, level
+    global is_running, x, y
     for event in pygame.event.get():
         if event.type == QUIT:
             is_running = False
 
         if (event.type == KEYDOWN) and (statut == 1) and (model.affichage != 0):
             if event.key == K_e:
-                zone_de_text = "Bow acquired"
+                model.zone_de_text = "Bow acquired"
                 model.affichage = 0
 
         if pygame.mouse.get_pressed()[0]:
@@ -63,37 +65,41 @@ def event_manager():
             if event.key == K_c:
                 print(player_rect.x, player_rect.y)
             if event.key == K_n:
-                if level >= 3:
-                    level = 0
+                if model.level >= 3:
+                    model.level = 0
                 else:
-                    level += 1
-            if event.key == K_RIGHT:
-                moving_right = True
-                stay_right = True
-            if event.key == K_LEFT:
-                moving_left = True
-                stay_right = False
-            if event.key == K_SPACE or event.key == K_UP:
-                if air_timer < 3:
-                    momentum = -9
+                    model.level += 1
+                pygame.mixer.music.load(liste_music[model.level - 1])
+                pygame.mixer.music.play()
+            if event.key == K_RIGHT or event.key == K_d:
+                model.moving_right = True
+                model.stay_right = True
+            if event.key == K_LEFT or event.key == K_q:
+                model.moving_left = True
+                model.stay_right = False
+            if event.key == K_SPACE or event.key == K_UP or event.key == K_z:
+                if 0 in model.falling:
+                    model.momentum = 10
+                    model.falling.pop(0)
+                    model.falling.append(1)
         if event.type == KEYUP:
-            if event.key == K_RIGHT:
-                moving_right = False
-            if event.key == K_LEFT:
-                moving_left = False
+            if event.key == K_RIGHT or event.key == K_d:
+                model.moving_right = False
+            if event.key == K_LEFT or event.key == K_q:
+                model.moving_left = False
 
 
 def unnamed():
-    global y, x, momentum, player_rect, statut, derniereaction, now, air_timer
+    global y, x, player_rect, statut
     display.fill((146, 244, 255))
     if player_rect.x > 950:
-        scroll[0] += (player_rect.x - scroll[0] - 950)
+        scroll[0] = player_rect.x - 950
     if player_rect.y < 150:
-        scroll[1] += (player_rect.y - scroll[1] - 540)
+        scroll[1] = player_rect.y - 540
     # Affichage des blocks
     tile_rects = []
     y = 0
-    for line_of_symbols in select_map(level):
+    for line_of_symbols in select_map(model.level):
         x = 0
         for symbol in line_of_symbols:
             if symbol in tl:
@@ -105,28 +111,29 @@ def unnamed():
                 tile_rects.append(pygame.Rect(x * 64, y * 64, 64, 64))
             x += 1
         y += 1
-    spike_level(level)
+    spike_level(model.level)
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
-    if moving_right:
+    if model.moving_right:
         player_movement[0] += 6 * model.player_velocity_multi
-    if moving_left:
+    if model.moving_left:
         player_movement[0] -= 6 * model.player_velocity_multi
-    player_movement[1] += momentum
-    momentum += 0.3 * model.player_velocity_multi
-    if momentum > 3:
-        momentum = 3
+    player_movement[1] -= model.momentum
+    if model.falling[-1]:
+        model.momentum -= 0.3 * model.player_velocity_multi
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
     if collisions['bottom']:
-        air_timer = 0
-        momentum = 0
+        model.momentum = 0
+        model.falling.append(0)
+        model.falling.pop(0)
     else:
-        air_timer += 1
+        model.falling.append(1)
+        model.falling.pop(0)
     if collisions["top"]:
-        momentum = 0
+        model.momentum *= -1
     # Flip the player image when goes to the left
     if model.player_velocity_multi == 1:
-        if stay_right:
+        if model.stay_right:
             display.blit(
                 player_img, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
         else:
@@ -137,10 +144,10 @@ def unnamed():
     if statut and model.affichage == 1:
         display.blit(text, (800, 875))
 
-    if level == 1:
+    if model.level == 1:
         isinspike1 = isinzone(725, player_rect.x, 790, 490, player_rect.y + 30, 510)
         isinspike2 = isinzone(960, player_rect.x, 1025, 490, player_rect.y + 30, 510)
-    elif level == 2:
+    elif model.level == 2:
         isinspike1 = isinzone(850 + 200, player_rect.x, 915 + 200, 490, player_rect.y + 30, 510)
         isinspike2 = isinzone(1085 + 200, player_rect.x, 1150 + 200, 490, player_rect.y + 30, 510)
     else:
@@ -148,12 +155,12 @@ def unnamed():
         isinspike2 = False
 
     if isinspike1 or isinspike2:
-        if now - derniereaction > 2000:
+        if model.now - model.derniereaction > 2000:
             model.number_of_life -= 1
-            derniereaction = now
+            model.derniereaction = model.now
 
-    now = pygame.time.get_ticks()
-    cpteur = game_font.render(str(zone_de_text), False, "brown")
+    model.now = pygame.time.get_ticks()
+    cpteur = game_font.render(str(model.zone_de_text), False, "brown")
     diedFromVoid(player_rect.y)
     event_manager()
     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
@@ -167,8 +174,8 @@ def unnamed():
     clock.tick(60)
 
 
-pygame.mixer.music.load('other/Rick Astley - Never Gonna Give You Up (Official Music Video).wav')
-pygame.mixer.music.play(-1)
+pygame.mixer.music.load(liste_music[model.level - 1])
+pygame.mixer.music.play()
 
 is_running = True
 

@@ -14,3 +14,4 @@ now = 0
 level = 1
 derniereaction = 0
 mode = "menu"
+falling = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
