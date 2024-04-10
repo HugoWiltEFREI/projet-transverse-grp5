@@ -176,7 +176,7 @@ def settings():
 
     manager = pygame_gui.UIManager((int(1800), int(1800)), "other/settings.json")
 
-    dropdown = pygame_gui.elements.UIDropDownMenu(["Test1", "Test2", "Test3"], "Test1",
+    dropdown = pygame_gui.elements.UIDropDownMenu(["5 HP", "3 HP", "1 HP"], "3 HP",
                                                   pygame.Rect((715, 375), (900, 30)), manager)
 
     sound = pygame_gui.elements.UIHorizontalSlider(pygame.Rect((715, 485), (900, 30)), 50, (0, 100), manager)
@@ -193,7 +193,7 @@ def settings():
     slider_background2.fill("#c0ffee")
 
     text = game_font.render("SETTINGS :", False, "lightblue")
-    text_resolution = text_font.render("RESOLUTION : ", False, "lightblue")
+    text_hp = text_font.render("DIFFICULTY : ", False, "lightblue")
     text_sound = text_font.render("SOUND :", False, "lightblue")
     text_music = text_font.render("MUSIC :", False, "lightblue")
     text_back = pygame_gui.elements.UIButton(pygame.Rect((1440, 240), (150, 75)), "BACK>", manager)
@@ -221,10 +221,10 @@ def settings():
 
             if event.type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
                 if event.ui_element == dropdown:
-                    if event.text == "Test1":
+                    if event.text == "5 HP":
                         model.number_of_life = 5
-                    elif event.text == "Test2":
-                        scalar = 0.7
+                    elif event.text == "3 HP":
+                        model.number_of_life = 3
 
             manager.process_events(event)
 
@@ -250,7 +250,7 @@ def settings():
         screen.blit(value_music, (600, 620))
 
         screen.blit(text, (335, 225))
-        screen.blit(text_resolution, (335, 350))
+        screen.blit(text_hp, (335, 350))
         screen.blit(text_sound, (335, 460))
         screen.blit(text_music, (335, 595))
         manager.draw_ui(screen)
