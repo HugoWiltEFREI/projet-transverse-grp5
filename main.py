@@ -29,8 +29,11 @@ bow = pygame.image.load("textures/bow.png")
 bluegrass = pygame.image.load("textures/grassCenterBlue.png")
 bluegrassMid = pygame.image.load("textures/grassMiddleBlue.png")
 darkBlock = pygame.image.load("textures/texture mario underground.png")
+portal_entrance = pygame.image.load("textures/entrance_portal.png")
+portal_exit = pygame.image.load("textures/exit_portal.png")
 
-tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock}
+tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 'e': portal_entrance,
+      's': portal_exit}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
