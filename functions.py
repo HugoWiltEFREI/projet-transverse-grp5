@@ -102,3 +102,8 @@ heart = pygame.image.load("textures/hud_heartFull.png")
 spike = pygame.image.load("textures/spike.png")
 scroll = [0, 0]
 player_rect = pygame.Rect(25, 25, 30, 40)
+
+
+def forward_lvl():
+    model.level += 1
+    model.level %= 3

@@ -6,20 +6,10 @@ from menu import menu
 
 pygame.init()
 clock = pygame.time.Clock()
-
 pygame.display.set_caption('Game')
 game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
 text = game_font.render("PRESS E", False, "brown")
-zone_de_text = ""
-
-moving_right = False
-moving_left = False
 # For the pygame.transform.flip(player_img, 1, 0)
-
-stay_right = True
-momentum = 0
-air_timer = 0
-
 liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
                "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav"]
 
@@ -69,10 +59,7 @@ def event_manager():
             if event.key == K_c:
                 print(player_rect.x, player_rect.y)
             if event.key == K_n:
-                if model.level >= 3:
-                    model.level = 0
-                else:
-                    model.level += 1
+                forward_lvl()
                 pygame.mixer.music.load(liste_music[model.level - 1])
                 pygame.mixer.music.play()
             if event.key == K_RIGHT or event.key == K_d:
@@ -83,7 +70,7 @@ def event_manager():
                 model.stay_right = False
             if event.key == K_SPACE or event.key == K_UP or event.key == K_z:
                 if 0 in model.falling:
-                    model.momentum = 10
+                    model.momentumY = 10
                     model.falling.pop(0)
                     model.falling.append(1)
         if event.type == KEYUP:
@@ -93,7 +80,7 @@ def event_manager():
                 model.moving_left = False
 
 
-def unnamed():
+def game():
     global y, x, player_rect, statut
     display.fill((146, 244, 255))
     if player_rect.x > 950:
@@ -122,19 +109,19 @@ def unnamed():
         player_movement[0] += 6 * model.player_velocity_multi
     if model.moving_left:
         player_movement[0] -= 6 * model.player_velocity_multi
-    player_movement[1] -= model.momentum
+    player_movement[1] -= model.momentumY
     if model.falling[-1]:
-        model.momentum -= 0.3 * model.player_velocity_multi
+        model.momentumY -= 0.3 * model.player_velocity_multi
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
     if collisions['bottom']:
-        model.momentum = 0
+        model.momentumY = 0
         model.falling.append(0)
         model.falling.pop(0)
     else:
         model.falling.append(1)
         model.falling.pop(0)
     if collisions["top"]:
-        model.momentum *= -1
+        model.momentumY *= -1
     # Flip the player image when goes to the left
     if model.player_velocity_multi == 1:
         if model.stay_right:
@@ -187,4 +174,4 @@ while is_running:
     if model.show_menu == 1:
         menu()
     else:
-        unnamed()
+        game()
