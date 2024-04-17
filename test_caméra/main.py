@@ -28,6 +28,7 @@ grasscenter = pygame.image.load("grassCenter.png")
 castleimage = pygame.image.load("castleMid.png")
 castlecenter = pygame.image.load("castleCenter.png")
 water = pygame.image.load("liquidWater.png")
+ball = pygame.image.load("balle.png")
 
 scroll = [0, 0]
 
@@ -158,6 +159,14 @@ def spike_level(level):
         display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
 
 
+verif_balle = False
+
+
+def lancer_balle(coord, ball, screen, scroll):
+    screen.blit(ball, coord)
+    pass
+
+
 derniereaction = 0
 loop = 1
 while loop:
@@ -259,6 +268,8 @@ while loop:
             if event.key == K_SPACE or event.key == K_UP:
                 if air_timer < 3:
                     momentum = -9
+            if event.key == K_h:
+                verif_balle = True
         if event.type == KEYUP:
             if event.key == K_RIGHT:
                 moving_right = False
@@ -269,6 +280,11 @@ while loop:
     screen.blit(cpteur, (30, 30))
     if affichage != 0:
         screen.blit(bow, (465 - scroll[0], 465 - scroll[1]))
+    coord_balle = [player_rect.x - scroll[0], player_rect.y - scroll[1]]
+    if verif_balle:
+        lancer_balle(coord_balle, ball, screen, scroll)
+    coord_balle[0] += 10
+
     life_left(nombre_de_vie)
     pygame.display.update()
     clock.tick(60)
