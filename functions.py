@@ -3,6 +3,7 @@ from pygame.locals import KEYDOWN, K_r
 
 import model
 from levels import game_map1, game_map2, game_map3
+import main
 
 
 def is_dead(event):
@@ -48,6 +49,8 @@ def move(rect, movement, tiles):
         elif movement[1] < 0:
             rect.top = tile.bottom
             collision_types['top'] = True
+        if tile == main.portal_exit:
+            print("Sorti\n")
     return rect, collision_types
 
 
