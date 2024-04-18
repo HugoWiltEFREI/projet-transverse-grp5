@@ -31,16 +31,12 @@ player_img = pygame.image.load('textures/perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
-now = 0
-level = 1
-derniereaction = 0
-
 
 def event_manager():
-    global is_running, x, y
+    global x, y
     for event in pygame.event.get():
         if event.type == QUIT:
-            is_running = False
+            model.is_running = False
 
         if (event.type == KEYDOWN) and (statut == 1) and (model.affichage != 0):
             if event.key == K_e:
@@ -55,7 +51,7 @@ def event_manager():
 
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
-                is_running = False
+                model.is_running = False
             if event.key == K_c:
                 print(player_rect.x, player_rect.y)
             if event.key == K_n:
@@ -164,14 +160,14 @@ def game():
     pygame.display.update()
     clock.tick(60)
 
+def start():
+    pygame.mixer.music.load(liste_music[model.level - 1])
+    pygame.mixer.music.play()
+    model.is_running = True
+    while model.is_running:
+        if model.show_menu == 1:
+            menu()
+        else:
+            game()
 
-pygame.mixer.music.load(liste_music[model.level - 1])
-pygame.mixer.music.play()
-
-is_running = True
-
-while is_running:
-    if model.show_menu == 1:
-        menu()
-    else:
-        game()
+start()
