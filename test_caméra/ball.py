@@ -54,10 +54,10 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and bullet_fired == False:
                 # Tirer une balle
                 bullet_x = player_x + PLAYER_SIZE // 2
-                bullet_y = player_y + PLAYER_SIZE // 2
+                bullet_y = player_y - PLAYER_SIZE // 2
                 bullet_velocity_y = 10 # Vitesse de la balle en y
                 bullet_fired = True
 
