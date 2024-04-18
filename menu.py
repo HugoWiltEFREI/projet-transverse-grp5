@@ -94,7 +94,6 @@ def settings():
         pygame.display.update()
         model.val_music = music.get_current_value()
         model.val_sound = sound.get_current_value()
-        print(model.val_music / 100)
         pygame.mixer.music.set_volume(model.val_music / 100)
 
 

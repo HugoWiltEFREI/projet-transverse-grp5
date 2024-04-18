@@ -21,6 +21,7 @@ momentum = 0
 air_timer = 0
 
 jumpSound = pygame.mixer.Sound("musics/maro-jump-sound-effect_1.mp3")
+deathSound = pygame.mixer.Sound("musics/minecraft_hit_soundmp3converter.mp3")
 liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
                "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav"]
 
@@ -48,10 +49,10 @@ derniereaction = 0
 
 
 def event_manager():
-    global is_running, x, y
+    global x, y
     for event in pygame.event.get():
         if event.type == QUIT:
-            is_running = False
+            model.is_running = False
 
         if (event.type == KEYDOWN) and (statut == 1) and (model.affichage != 0):
             if event.key == K_e:
@@ -66,7 +67,7 @@ def event_manager():
 
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
-                is_running = False
+                model.is_running = False
             if event.key == K_c:
                 print(player_rect.x, player_rect.y)
             if event.key == K_n:
@@ -96,7 +97,7 @@ def event_manager():
                 model.moving_left = False
 
 
-def unnamed():
+def game():
     global y, x, player_rect, statut
     display.fill((146, 244, 255))
     if player_rect.x > 950:
@@ -115,7 +116,7 @@ def unnamed():
                     tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
-                tile_rects.append(pygame.Rect(x * 64, y * 64, 64, 64))
+                tile_rects.append((pygame.Rect(x * 64, y * 64, 64, 64), symbol))
             x += 1
         y += 1
     spike_level(model.level)
@@ -163,6 +164,8 @@ def unnamed():
 
     if isinspike1 or isinspike2:
         if model.now - model.derniereaction > 2000:
+            deathSound.set_volume(model.val_sound / 100)
+            deathSound.play()
             model.number_of_life -= 1
             model.derniereaction = model.now
 
@@ -184,10 +187,16 @@ def unnamed():
 pygame.mixer.music.load(liste_music[model.level - 1])
 pygame.mixer.music.play()
 
-is_running = True
 
-while is_running:
-    if model.show_menu == 1:
-        menu()
-    else:
-        unnamed()
+def start():
+    pygame.mixer.music.load(liste_music[model.level - 1])
+    pygame.mixer.music.play()
+    model.is_running = True
+    while model.is_running:
+        if model.show_menu == 1:
+            menu()
+        else:
+            game()
+
+
+start()

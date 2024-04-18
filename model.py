@@ -17,3 +17,4 @@ mode = "menu"
 falling = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 val_sound = 50
 val_music = 50
+is_running = True

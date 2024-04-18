@@ -22,7 +22,7 @@ def collision_test(rect, tiles):
     # Return le rect en collision avec le player
     hit_list = []
     for tile in tiles:
-        if rect.colliderect(tile):
+        if rect.colliderect(tile[0]):
             hit_list.append(tile)
     return hit_list
 
@@ -34,20 +34,24 @@ def move(rect, movement, tiles):
     hit_list = collision_test(rect, tiles)
     for tile in hit_list:
         if movement[0] > 0:
-            rect.right = tile.left
+            rect.right = tile[0].left
             collision_types['right'] = True
         elif movement[0] < 0:
-            rect.left = tile.right
+            rect.left = tile[0].right
             collision_types['left'] = True
+        if tile[1] == 's':
+            forward_lvl()
     rect.y += movement[1]
     hit_list = collision_test(rect, tiles)
     for tile in hit_list:
         if movement[1] > 0:
-            rect.bottom = tile.top
+            rect.bottom = tile[0].top
             collision_types['bottom'] = True
         elif movement[1] < 0:
-            rect.top = tile.bottom
+            rect.top = tile[0].bottom
             collision_types['top'] = True
+        if tile[1] == 's':
+            forward_lvl()
     return rect, collision_types
 
 
@@ -102,3 +106,8 @@ heart = pygame.image.load("textures/hud_heartFull.png")
 spike = pygame.image.load("textures/spike.png")
 scroll = [0, 0]
 player_rect = pygame.Rect(25, 25, 30, 40)
+
+
+def forward_lvl():
+    model.level += 1
+    model.level %= 3
