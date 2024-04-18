@@ -95,7 +95,7 @@ def game():
                     tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
-                tile_rects.append(pygame.Rect(x * 64, y * 64, 64, 64))
+                tile_rects.append((pygame.Rect(x * 64, y * 64, 64, 64),symbol))
             x += 1
         y += 1
     spike_level(model.level)
