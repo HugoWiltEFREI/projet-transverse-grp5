@@ -15,3 +15,5 @@ level = 1
 derniereaction = 0
 mode = "menu"
 falling = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+val_sound = 50
+val_music = 50

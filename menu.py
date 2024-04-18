@@ -17,8 +17,10 @@ def settings():
     dropdown = pygame_gui.elements.UIDropDownMenu(["5 HP", "3 HP", "1 HP"], "3 HP",
                                                   pygame.Rect((715, 375), (900, 30)), manager)
 
-    sound = pygame_gui.elements.UIHorizontalSlider(pygame.Rect((715, 485), (900, 30)), 50, (0, 100), manager)
-    music = pygame_gui.elements.UIHorizontalSlider(pygame.Rect((715, 620), (900, 30)), 50, (0, 100), manager)
+    sound = pygame_gui.elements.UIHorizontalSlider(pygame.Rect((715, 485), (900, 30)), model.val_sound, (0, 100),
+                                                   manager)
+    music = pygame_gui.elements.UIHorizontalSlider(pygame.Rect((715, 620), (900, 30)), model.val_music, (0, 100),
+                                                   manager)
 
     settings_background1 = pygame.surface.Surface((415, 75))
     settings_background1.fill("#032058")
@@ -63,8 +65,8 @@ def settings():
             manager.process_events(event)
 
         manager.update(time_delta)
-        value_sound = volume_font.render(str(sound.get_current_value()), False, "lightblue")
-        value_music = volume_font.render(str(music.get_current_value()), False, "lightblue")
+        valeur_sound = volume_font.render(str(int(sound.get_current_value())), False, "lightblue")
+        valeur_music = volume_font.render(str(int(music.get_current_value())), False, "lightblue")
 
         screen.blit(background, (0, -80))
 
@@ -80,8 +82,8 @@ def settings():
         screen.blit(slider_background2, (430, 655))
         screen.blit(slider_background1, (320, 605))
 
-        screen.blit(value_sound, (600, 485))
-        screen.blit(value_music, (600, 620))
+        screen.blit(valeur_sound, (600, 485))
+        screen.blit(valeur_music, (600, 620))
 
         screen.blit(text, (335, 225))
         screen.blit(text_hp, (335, 350))
@@ -90,8 +92,10 @@ def settings():
         manager.draw_ui(screen)
 
         pygame.display.update()
-        val_music = float(music.get_current_value() / 100)
-        pygame.mixer.music.set_volume(val_music)
+        model.val_music = music.get_current_value()
+        model.val_sound = sound.get_current_value()
+        print(model.val_music / 100)
+        pygame.mixer.music.set_volume(model.val_music / 100)
 
 
 def menu():

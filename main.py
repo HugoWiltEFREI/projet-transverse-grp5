@@ -20,6 +20,7 @@ stay_right = True
 momentum = 0
 air_timer = 0
 
+jumpSound = pygame.mixer.Sound("musics/maro-jump-sound-effect_1.mp3")
 liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
                "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav"]
 
@@ -83,6 +84,8 @@ def event_manager():
                 model.stay_right = False
             if event.key == K_SPACE or event.key == K_UP or event.key == K_z:
                 if 0 in model.falling:
+                    jumpSound.set_volume(model.val_sound / 100)
+                    jumpSound.play()
                     model.momentum = 10
                     model.falling.pop(0)
                     model.falling.append(1)
