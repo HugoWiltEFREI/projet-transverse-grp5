@@ -18,11 +18,11 @@ def is_dead(event):
             scroll[0], scroll[1] = 0, 0
 
 
-def collision_test(rect, tiles):
+def collision_test(rect, tiles = []):
     # Return le rect en collision avec le player
     hit_list = []
     for tile in tiles:
-        if rect.colliderect(tile[0]):
+        if rect.colliderect(tile):
             hit_list.append(tile)
     return hit_list
 
@@ -31,7 +31,7 @@ def move(rect, movement, tiles):
     collision_types = {
         'top': False, 'bottom': False, 'right': False, 'left': False}
     rect.x += movement[0]
-    hit_list = collision_test(rect, tiles)
+    hit_list = collision_test(rect, tiles.values())
     for tile in hit_list:
         if movement[0] > 0:
             rect.right = tile[0].left
@@ -42,7 +42,7 @@ def move(rect, movement, tiles):
         if tile[1] == 's':
             forward_lvl()
     rect.y += movement[1]
-    hit_list = collision_test(rect, tiles)
+    hit_list = collision_test(rect, tiles.values())
     for tile in hit_list:
         if movement[1] > 0:
             rect.bottom = tile[0].top
@@ -111,3 +111,6 @@ player_rect = pygame.Rect(25, 25, 30, 40)
 def forward_lvl():
     model.level += 1
     model.level %= 3
+
+def lvl_portal_tp(entrance_rect):
+    return 0

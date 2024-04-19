@@ -75,6 +75,22 @@ def event_manager():
             if event.key == K_LEFT or event.key == K_q:
                 model.moving_left = False
 
+def lvl_tiles_list(level):
+    y = 0
+    tile_rects = {}
+    for line_of_symbols in select_map(level):
+        x = 0
+        for symbol in line_of_symbols:
+            if symbol in tl:
+                # Blit des images avec coords
+                display.blit(
+                    tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
+            # Hitboxs pour les images avec collisions
+            if symbol != "-" and symbol != "O":
+                tile_rects[symbol] = pygame.Rect(x * 64, y * 64, 64, 64)
+            x += 1
+        y += 1
+    return tile_rects
 
 def game():
     global y, x, player_rect, statut
@@ -85,19 +101,7 @@ def game():
         scroll[1] = player_rect.y - 540
     # Affichage des blocks
     tile_rects = []
-    y = 0
-    for line_of_symbols in select_map(model.level):
-        x = 0
-        for symbol in line_of_symbols:
-            if symbol in tl:
-                # Blit des images avec coords
-                display.blit(
-                    tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
-            # Hitboxs pour les images avec collisions
-            if symbol != "-" and symbol != "O":
-                tile_rects.append((pygame.Rect(x * 64, y * 64, 64, 64),symbol))
-            x += 1
-        y += 1
+    tile_rects = lvl_tiles_list(model.level)
     spike_level(model.level)
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
