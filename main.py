@@ -23,7 +23,7 @@ air_timer = 0
 jumpSound = pygame.mixer.Sound("musics/maro-jump-sound-effect_1.mp3")
 deathSound = pygame.mixer.Sound("musics/minecraft_hit_soundmp3converter.mp3")
 liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
-               "Ismail Khalid Cover Mediterranean Sundance Live At Friday Nights In San Francisco FULL LENGTH 01 09.mp3",
+               "musics/Charlie-Parker-Donna-Lee.wav",
                "musics/Undertale_Chill.wav"]
 
 grassimage = pygame.image.load("textures/grassMid.png")
