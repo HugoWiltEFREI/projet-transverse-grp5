@@ -23,7 +23,8 @@ air_timer = 0
 jumpSound = pygame.mixer.Sound("musics/maro-jump-sound-effect_1.mp3")
 deathSound = pygame.mixer.Sound("musics/minecraft_hit_soundmp3converter.mp3")
 liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
-               "Ismail Khalid Cover Mediterranean Sundance Live At Friday Nights In San Francisco FULL LENGTH 01 09.mp3", "musics/Undertale_Chill.wav"]
+               "Ismail Khalid Cover Mediterranean Sundance Live At Friday Nights In San Francisco FULL LENGTH 01 09.mp3",
+               "musics/Undertale_Chill.wav"]
 
 grassimage = pygame.image.load("textures/grassMid.png")
 grasscenter = pygame.image.load("textures/grassCenter.png")
@@ -41,10 +42,6 @@ text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 player_img = pygame.image.load('textures/perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
-
-now = 0
-level = 1
-derniereaction = 0
 
 
 def event_manager():
