@@ -39,8 +39,8 @@ def move(rect, movement, tiles):
         elif movement[0] < 0:
             rect.left = tile[0].right
             collision_types['left'] = True
-        if tile[1] == 's':
-            forward_lvl()
+        collisionPortal(tile)
+
     rect.y += movement[1]
     hit_list = collision_test(rect, tiles)
     for tile in hit_list:
@@ -50,9 +50,17 @@ def move(rect, movement, tiles):
         elif movement[1] < 0:
             rect.top = tile[0].bottom
             collision_types['top'] = True
-        if tile[1] == 's':
-            forward_lvl()
+        collisionPortal(tile)
     return rect, collision_types
+
+
+def collisionPortal(tile):
+    if tile[1] == 's':
+        forward_lvl()
+        player_rect.x = 30
+        player_rect.y = 30
+        scroll[0] = 0
+        scroll[1] = 0
 
 
 def isinzone(x1, x2, x3, y1, y2, y3):
@@ -109,5 +117,5 @@ player_rect = pygame.Rect(25, 25, 30, 40)
 
 
 def forward_lvl():
-    model.level += 1
     model.level %= 3
+    model.level += 1

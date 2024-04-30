@@ -34,8 +34,7 @@ darkBlock = pygame.image.load("textures/texture mario underground.png")
 portal_entrance = pygame.image.load("textures/entrance_portal.png")
 portal_exit = pygame.image.load("textures/exit_portal.png")
 
-tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 'e': portal_entrance,
-      's': portal_exit}
+tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
@@ -175,6 +174,7 @@ def game():
     event_manager()
     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
     screen.blit(cpteur, (30, 30))
+    screen.blit(portal_entrance, (10 - scroll[0], 40 - scroll[1]))
     if model.affichage != 0:
         screen.blit(bow, (465 - scroll[0], 465 - scroll[1]))
     if model.display_dead != 0:

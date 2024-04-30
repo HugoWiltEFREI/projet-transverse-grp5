@@ -61,6 +61,8 @@ def settings():
                         model.number_of_life = 5
                     elif event.text == "3 HP":
                         model.number_of_life = 3
+                    elif event.text == "1 HP":
+                        model.number_of_life = 1
 
             manager.process_events(event)
 
