@@ -107,6 +107,11 @@ def level_actions(level):
     spike_level(level)
 
 
+def forward_lvl():
+    model.level %= 3
+    model.level += 1
+
+
 display = pygame.Surface((1920, 1080))
 WINDOW_SIZE = (0, 0)
 screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
@@ -114,8 +119,3 @@ heart = pygame.image.load("textures/hud_heartFull.png")
 spike = pygame.image.load("textures/spike.png")
 scroll = [0, 0]
 player_rect = pygame.Rect(25, 25, 30, 40)
-
-
-def forward_lvl():
-    model.level %= 3
-    model.level += 1
