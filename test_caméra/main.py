@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-import equations
+
 
 pygame.init()
 
@@ -63,7 +63,35 @@ xxxxxxxxxxxxxxxxxxxo----------x----------o---------o------------oooo------------
 xxxxxxxxxxxxxxxxxxxxooooooooooxoooooooooox--oooooooxoooooooooo-----------------ooo------------ooo0------------------
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
 """.splitlines()
+ #_______________________________________________________ENEMIS
 
+
+
+
+sprite_sheet_image = pygame.image.load("Zombie.png")
+black = 0, 0, 0
+import spritesheet
+
+sprite_sheet = spritesheet.Spritesheet(sprite_sheet_image)
+
+#create animation list
+animation_list = []
+animation_step = 4
+
+for i in range(animation_step):
+    animation_list.append(sprite_sheet.get_image(i, 32, 32, 2, black))
+
+# frame_0 = animation_list[0]
+# frame_1 = animation_list[1]
+# frame_2 = animation_list[2]
+# frame_3 = animation_list[3]
+
+#il y a du code dans la boucle while
+
+
+
+
+#_______________________________________________________________
 game_map = [list(lst) for lst in game_map1]
 bow = pygame.image.load("bow.png")
 spike = pygame.image.load("spike.png")
@@ -120,55 +148,20 @@ def move(rect, movement, tiles):
             rect.top = tile.bottom
             collision_types['top'] = True
     return rect, collision_types
-
-
-
-# def __moveBall():
-#     """ Calculates the new position (x,y), new speed (speedX, speedY) of the ball.
-#         Also controls its bounce.
-#             x(t+1) = x(t) + Vx(t) * cos(α) * Δt
-#             Vx(t+1) = Vx(t) with no bounce
-#             Vx(t+1) = Vx(t) * frictionX on a bounce
-#             y(t+1) = y(t) + Δt * (Vy(t) - (g * Δt))
-#             Vy(t+1) = Vy(t) - g * Δt with no bounce
-#             Vy(t+1) = (Vy(t) - g * Δt) * frictionX on a bounce
-#     """
-#
-#     """ Calculates the new y, y(t+1)."""
-#     BallBounceModel.ball['y'] += BallBounceModel.INTERVAL * (
-#                 BallBounceModel.ball['speedY'] - (BallBounceModel.GRAVITY * BallBounceModel.INTERVAL))
-#
-#     """ Calculates the new speedY, Vy(t+1)."""
-#     BallBounceModel.ball['speedY'] += - BallBounceModel.GRAVITY * BallBounceModel.INTERVAL
-#
-#
-#     """ Calculates the new speedY, Vy(t+1)."""
-#     if bounceX:
-#         """ Change angle after a bounce."""
-#         BallBounceModel.ball['angle'] = (180 - BallBounceModel.ball['angle']) % 360
-#         """ Applies friction on the new speedX."""
-#         BallBounceModel.ball['speedX'] = BallBounceModel.ball['speedX'] * BallBounceModel.FRICTION_X
-
-
 def isinzone(x1, x2, x3, y1, y2, y3):
     if (x1 < x2 < x3) and (y1 < y2 < y3):
         return 1
     else:
         return 0
-
-
 def life_left(nombre_de_vie):
     i = 0
     while i < nombre_de_vie:
         screen.blit(coeur, (1500 + i * 80, 50))
         i += 1
-
 def diedFromVoid(posY):
     global nombre_de_vie
     if (posY>1000):
         nombre_de_vie = 0
-
-
 def spike_level(level):
     if level == 1:
         display.blit(spike, (1085 - scroll[0], 850 - scroll[1]))
@@ -176,8 +169,6 @@ def spike_level(level):
     if level == 2:
         display.blit(spike, (985 - scroll[0], 465 - scroll[1]))
         display.blit(spike, (750 - scroll[0], 465 - scroll[1]))
-
-
 def is_dead():
     global display_dead, nombre_de_vie, player_velocity_multi
     if nombre_de_vie <= 0:
@@ -195,11 +186,24 @@ def is_dead():
 def level_actions(level):
     spike_level(level)
 
-
 while loop:
     # CLEAR THE SCREEN
     display.fill((146, 244, 255))
+    #____________________________________________________________ENEMIS
+    current_frame = 0
+    for i in range(animation_step):
+        screen.blit(animation_list[i], (i*72, 0))
+        current_frame = (current_frame + 1) % animation_step
 
+    # display.blit(frame_0, (0, 0))
+    # display.blit(frame_1, (100, 0))
+    # display.blit(frame_2, (200, 0))
+    # display.blit(frame_3, (300, 0))
+    screen.blit(pygame.transform.scale(display,(1920, 1080)), (0, 0))
+
+
+
+    #_________________________________________________________________
     if player_rect.x > 950:
         scroll[0] += int(player_rect.x - scroll[0] - 950)
     if player_rect.y < 150:
@@ -239,6 +243,8 @@ while loop:
         momentum = 3*GRAVITE*INTERVAL        #_____________________________________________________
 
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
+
+
 
     if collisions['bottom']:
         air_timer = 0
