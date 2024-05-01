@@ -173,3 +173,6 @@ def credits():
         screen.blit(text_credit, (330, 230))
         manager.draw_ui(screen)
         pygame.display.update()
+
+
+"Mieux vaut guérir que prévenir - Raphael"

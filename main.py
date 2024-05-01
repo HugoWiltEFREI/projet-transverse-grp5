@@ -83,7 +83,8 @@ def event_manager():
                 if 0 in model.falling:
                     jumpSound.set_volume(model.val_sound / 100)
                     jumpSound.play()
-                    model.momentum = 10
+                    model.speedY = (8 * model.jumpSpeed / 10) + (2 * model.jumpSpeed / 10) * (
+                                abs(model.fallSpeedX) / model.speedMaxX)
                     model.falling.pop(0)
                     model.falling.append(1)
         if event.type == KEYUP:
@@ -118,23 +119,48 @@ def game():
     spike_level(model.level)
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
-    if model.moving_right:
-        player_movement[0] += 6 * model.player_velocity_multi
-    if model.moving_left:
-        player_movement[0] -= 6 * model.player_velocity_multi
-    player_movement[1] -= model.momentum
+    player_movement[0] += model.fallSpeedX
+    if model.moving_right and (not model.moving_left):
+        model.fallSpeedX += model.accX
+    elif model.moving_left and (not model.moving_right):
+        model.fallSpeedX -= model.accX
+    else:
+
+        if model.fallSpeedX > 0:
+            model.fallSpeedX -= model.accX
+            print("right speed reducing")
+            if model.fallSpeedX < 0:
+                model.fallSpeedX = 0
+        if model.fallSpeedX < 0:
+            model.fallSpeedX += model.accX
+            print("left speed reducing", model.fallSpeedX)
+            if model.fallSpeedX > 0:
+                model.fallSpeedX = 0
+    if model.fallSpeedX > model.speedMaxX:
+        model.fallSpeedX = model.speedMaxX
+    if model.fallSpeedX < -1 * model.speedMaxX:
+        model.fallSpeedX = -1 * model.speedMaxX
+
+    player_movement[1] -= model.speedY
     if model.falling[-1]:
-        model.momentum -= 0.3 * model.player_velocity_multi
+        if model.speedY > 0:
+            model.speedY -= model.accYp * model.player_velocity_multi
+        else:
+            model.speedY -= model.accYn * model.player_velocity_multi
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
     if collisions['bottom']:
-        model.momentum = 0
+        model.speedY = 0
         model.falling.append(0)
         model.falling.pop(0)
     else:
         model.falling.append(1)
         model.falling.pop(0)
     if collisions["top"]:
-        model.momentum *= -1
+        model.speedY *= -1
+    if collisions["left"] and model.fallSpeedX < 0:
+        model.fallSpeedX = 0
+    if collisions["right"] and model.fallSpeedX > 0:
+        model.fallSpeedX = 0
     # Flip the player image when goes to the left
     if model.player_velocity_multi == 1:
         if model.stay_right:
