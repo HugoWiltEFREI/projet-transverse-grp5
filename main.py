@@ -10,15 +10,6 @@ clock = pygame.time.Clock()
 pygame.display.set_caption('Game')
 game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
 text = game_font.render("PRESS E", False, "brown")
-zone_de_text = ""
-
-moving_right = False
-moving_left = False
-# For the pygame.transform.flip(player_img, 1, 0)
-
-stay_right = True
-momentum = 0
-air_timer = 0
 
 jumpSound = pygame.mixer.Sound("musics/maro-jump-sound-effect_1.mp3")
 deathSound = pygame.mixer.Sound("musics/minecraft_hit_soundmp3converter.mp3")
@@ -41,11 +32,6 @@ text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 player_img = pygame.image.load('textures/perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
-
-now = 0
-level = 1
-derniereaction = 0
-
 
 def event_manager():
     global x, y
@@ -86,7 +72,7 @@ def event_manager():
                 if 0 in model.falling:
                     jumpSound.set_volume(model.val_sound / 100)
                     jumpSound.play()
-                    model.momentum = 10
+                    model.speedY = (8*model.jumpSpeed/10) + (2*model.jumpSpeed/10)*(abs(model.fallSpeedX)/model.speedMaxX)
                     model.falling.pop(0)
                     model.falling.append(1)
         if event.type == KEYUP:
@@ -121,23 +107,48 @@ def game():
     spike_level(model.level)
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
-    if model.moving_right:
-        player_movement[0] += 6 * model.player_velocity_multi
-    if model.moving_left:
-        player_movement[0] -= 6 * model.player_velocity_multi
-    player_movement[1] -= model.momentum
+    player_movement[0] += model.fallSpeedX
+    if model.moving_right and (not model.moving_left):
+        model.fallSpeedX += model.accX
+    elif model.moving_left and (not model.moving_right):
+        model.fallSpeedX -= model.accX
+    else:
+        
+        if model.fallSpeedX > 0:
+            model.fallSpeedX -= model.accX
+            print("right speed reducing")
+            if model.fallSpeedX < 0:
+                model.fallSpeedX = 0
+        if model.fallSpeedX < 0:
+            model.fallSpeedX += model.accX
+            print("left speed reducing",model.fallSpeedX)
+            if model.fallSpeedX > 0:
+                model.fallSpeedX = 0
+    if model.fallSpeedX > model.speedMaxX:
+        model.fallSpeedX = model.speedMaxX
+    if model.fallSpeedX < -1*model.speedMaxX:
+        model.fallSpeedX = -1*model.speedMaxX
+
+    player_movement[1] -= model.speedY
     if model.falling[-1]:
-        model.momentum -= 0.3 * model.player_velocity_multi
+        if model.speedY > 0:
+            model.speedY -= model.accYp * model.player_velocity_multi
+        else:
+            model.speedY -= model.accYn * model.player_velocity_multi
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
     if collisions['bottom']:
-        model.momentum = 0
+        model.speedY = 0
         model.falling.append(0)
         model.falling.pop(0)
     else:
         model.falling.append(1)
         model.falling.pop(0)
     if collisions["top"]:
-        model.momentum *= -1
+        model.speedY *= -1
+    if collisions["left"] and model.fallSpeedX < 0:
+        model.fallSpeedX = 0
+    if collisions["right"] and model.fallSpeedX > 0:
+        model.fallSpeedX = 0
     # Flip the player image when goes to the left
     if model.player_velocity_multi == 1:
         if model.stay_right:
