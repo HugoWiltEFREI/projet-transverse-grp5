@@ -1,35 +1,26 @@
 import pygame
 from pygame.locals import *
-
-
 pygame.init()
-
 clock = pygame.time.Clock()
-
 pygame.display.set_caption('Game')
 game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
 text = game_font.render("PRESS E", False, "brown")
 zone_de_text = ""
 affichage = 1
-
 WINDOW_SIZE = (0, 0)
 # This will be the Surface where we will blit everything
 display = pygame.Surface((1920, 1080))
 # Then we will scale (every frame) the display onto the screen
 screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
-
 moving_right = False
 moving_left = False
 # For the pygame.transform.flip(player_img, 1, 0)
 stay_right = True
 momentum = 0
 air_timer = 0
-
 grassimage = pygame.image.load("grassMid.png")
 grasscenter = pygame.image.load("grassCenter.png")
-
 scroll = [0, 0]
-
 game_map2 = """
 ------------------------------
 ------------------------------
@@ -49,7 +40,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 """.splitlines()
-
 game_map1 = """
 -------------------------------------------------------------------------------------------------0------------------
 -------------------------------------------------------------------------------------------------0------------------
@@ -63,61 +53,49 @@ xxxxxxxxxxxxxxxxxxxo----------x----------o---------o------------oooo------------
 xxxxxxxxxxxxxxxxxxxxooooooooooxoooooooooox--oooooooxoooooooooo-----------------ooo------------ooo0------------------
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxxxxxxxxxxxxxxx--------------------------------xxx0------------------
 """.splitlines()
- #_______________________________________________________ENEMIS
-
-
-
-
-sprite_sheet_image = pygame.image.load("Zombie.png")
-black = 0, 0, 0
+#_______________________________________________________ENEMIE__________________
 import spritesheet
+sprite_sheet_image = pygame.image.load("Zombie.png").convert_alpha()
+sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
 
-sprite_sheet = spritesheet.Spritesheet(sprite_sheet_image)
-
-#create animation list
+black  = 0, 0, 0
+#créer une liste de frame
 animation_list = []
-animation_step = 4
+animation_step = 8
+action = 0
+last_update = pygame.time.get_ticks()
+animation_cooldown = 250
+frame = 0
 
 for i in range(animation_step):
+    # temp_img_list = []
     animation_list.append(sprite_sheet.get_image(i, 32, 32, 2, black))
 
-# frame_0 = animation_list[0]
-# frame_1 = animation_list[1]
-# frame_2 = animation_list[2]
-# frame_3 = animation_list[3]
 
-#il y a du code dans la boucle while
+# frame_0 = sprite_sheet.get_image(0,32 ,32, 2, black)
+# frame_1 = sprite_sheet.get_image(1,32 ,32, 2, black)
+# frame_2 = sprite_sheet.get_image(2,32 ,32, 2, black)
+# frame_3 = sprite_sheet.get_image(3,32 ,32, 2, black)
 
-
-
-
-#_______________________________________________________________
+#________________________________________________________________________________________
 game_map = [list(lst) for lst in game_map1]
 bow = pygame.image.load("bow.png")
 spike = pygame.image.load("spike.png")
-
 tl = {"o": grassimage, "x": grasscenter}
-
 player_img = pygame.image.load('perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
-
 player_rect = pygame.Rect(25, 25, 30, 40)
-
 nombre_de_vie = 3
 now = 0
 level = 2
 display_dead = 0
 derniereaction = 0
-
 loop = 1
 player_velocity_multi = 1
-
-
 coeur = pygame.image.load("hud_heartFull.png")
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
-
 def collision_test(rect, tiles):
     #Return le rect en collision avec le player
     hit_list = []
@@ -190,19 +168,18 @@ while loop:
     # CLEAR THE SCREEN
     display.fill((146, 244, 255))
     #____________________________________________________________ENEMIS
-    current_frame = 0
+    #update animation
+    current_time = pygame.time.get_ticks()
+    if current_time - last_update >= animation_cooldown:
+        frame += 1
+        last_update = current_time
+        if frame >= len(animation_list):
+            frame = 0
+
     for i in range(animation_step):
-        screen.blit(animation_list[i], (i*72, 0))
-        current_frame = (current_frame + 1) % animation_step
+        display.blit(animation_list[frame], (200, 200))
 
-    # display.blit(frame_0, (0, 0))
-    # display.blit(frame_1, (100, 0))
-    # display.blit(frame_2, (200, 0))
-    # display.blit(frame_3, (300, 0))
-    screen.blit(pygame.transform.scale(display,(1920, 1080)), (0, 0))
-
-
-
+    pygame.display.update()  # Met à jour l'affichage ( ou mettre flip)
     #_________________________________________________________________
     if player_rect.x > 950:
         scroll[0] += int(player_rect.x - scroll[0] - 950)
