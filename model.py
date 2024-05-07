@@ -18,3 +18,14 @@ falling = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 val_sound = 50
 val_music = 50
 is_running = True
+
+# Variables de la balle
+gravite = 9.81
+BALL_RADIUS = 10
+balle_lancee = False
+ball_cpt = 0
+temps = 0.5
+liste_ball = []
+# Positions de la balle :
+ball_x = 0
+ball_y = 0

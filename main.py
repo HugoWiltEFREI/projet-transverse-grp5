@@ -1,5 +1,6 @@
 import pygame.mixer
 from pygame.locals import *
+import math
 
 from functions import *
 from menu import menu
@@ -41,6 +42,21 @@ text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 player_img = pygame.image.load('textures/perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
+
+
+#######################################################################################################
+#######################################################################################################
+#######################################################################################################
+#Variables de la balle :
+v0 = 60
+angleRad = math.radians(65)
+vitesseInitialeX = v0 * math.cos(angleRad)
+vitesseInitialeY = -v0 * math.sin(angleRad)
+#######################################################################################################
+#######################################################################################################
+#######################################################################################################
+
+
 
 now = 0
 level = 1
@@ -89,11 +105,16 @@ def event_manager():
                     model.momentum = 10
                     model.falling.pop(0)
                     model.falling.append(1)
+            if event.key == K_h :
+                model.ball_cpt += 1
+                create_ball(model.liste_ball, vitesseInitialeX, vitesseInitialeY)
         if event.type == KEYUP:
             if event.key == K_RIGHT or event.key == K_d:
                 model.moving_right = False
             if event.key == K_LEFT or event.key == K_q:
                 model.moving_left = False
+            if event.key == K_h :
+                model.balle_lancee = False
 
 
 def game():
@@ -180,9 +201,12 @@ def game():
     if model.display_dead != 0:
         screen.blit(text2, (400, 100))
     life_left()
+
+    lancer_ball(model.liste_ball)
+
+
     pygame.display.update()
     clock.tick(60)
-
 
 pygame.mixer.music.load(liste_music[model.level - 1])
 pygame.mixer.music.play()

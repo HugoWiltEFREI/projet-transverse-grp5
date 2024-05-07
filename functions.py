@@ -119,3 +119,21 @@ player_rect = pygame.Rect(25, 25, 30, 40)
 def forward_lvl():
     model.level %= 3
     model.level += 1
+
+
+def create_ball(liste, vX, vY):
+    liste.append({"x": player_rect.x, "y": player_rect.y, "vx" :vX, "vy":vY})
+
+
+def lancer_ball(liste):
+    for ball in liste:
+        pygame.draw.circle(screen, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]), model.BALL_RADIUS)
+
+        ball["x"] += ball["vx"] * model.temps
+        ball["y"] += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
+
+        if ball["y"] >= 1000 - model.BALL_RADIUS:
+            ball["y"] = 1000 - model.BALL_RADIUS
+            ball["vy"] = -ball["vy"] * 0.9
+
+        ball["vy"] += model.gravite * model.temps
