@@ -126,7 +126,7 @@ def create_ball(liste, vX, vY):
 
 def lancer_ball(liste):
     for ball in liste:
-        pygame.draw.circle(screen, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]),
+        pygame.draw.circle(screen, "red", (round(ball["x"]) - scroll[0] + 30, round(ball["y"]) - scroll[1] + 30),
                            model.BALL_RADIUS)
 
         ball["x"] += ball["vx"] * model.temps
