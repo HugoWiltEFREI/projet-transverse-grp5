@@ -130,7 +130,7 @@ def lancer_ball(liste):
                            model.BALL_RADIUS)
 
         ball["x"] += ball["vx"] * model.temps
-        ball["y"] += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
+        ball["y"] += (ball["vy"] * model.temps) + (0.5 * model.gravxite * model.temps ** 2)
 
         if ball["y"] >= 1000 - model.BALL_RADIUS:
             ball["y"] = 1000 - model.BALL_RADIUS

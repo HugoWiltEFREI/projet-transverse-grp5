@@ -3,6 +3,7 @@ import math
 import pygame.mixer
 from pygame.locals import *
 
+import spritesheet
 from functions import *
 from menu import menu
 
@@ -53,11 +54,18 @@ v0 = 60
 angleRad = math.radians(65)
 vitesseInitialeX = v0 * math.cos(angleRad)
 vitesseInitialeY = -v0 * math.sin(angleRad)
+#######################################################################################################
+#######################################################################################################
+#######################################################################################################
+black = 0, 0, 0
+animation_list = []
+animation_step = 8
+sprite_sheet_image = player_img = pygame.image.load('textures/spritesheet.png').convert_alpha()
+sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
 
+for i in range(animation_step):
+    animation_list.append(sprite_sheet.get_image(i, 64, 64, 1, black))
 
-#######################################################################################################
-#######################################################################################################
-#######################################################################################################
 
 def event_manager():
     global x, y
@@ -181,12 +189,14 @@ def game():
     # Flip the player image when goes to the left
     if model.player_velocity_multi == 1:
         if model.stay_right:
-            display.blit(
-                player_img, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
+            for x in range(animation_step):
+                display.blit(animation_list[x], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
+
         else:
-            display.blit(
-                pygame.transform.flip(player_img, True, False),
-                (player_rect.x - scroll[0], player_rect.y - scroll[1]))
+            for x in range(animation_step):
+                display.blit(
+                    pygame.transform.flip(animation_list[x], True, False),
+                    (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and model.affichage == 1:
         display.blit(text, (800, 875))
