@@ -25,3 +25,14 @@ accYp = 0.3
 accYn = 0.5
 speedMaxX = 6
 jumpSpeed = 10
+
+# balle
+gravite = 9.81
+BALL_RADIUS = 10
+balle_lancee = False
+ball_cpt = 0
+temps = 0.5
+liste_ball = []
+# Positions de la balle :
+ball_x = 0
+ball_y = 0

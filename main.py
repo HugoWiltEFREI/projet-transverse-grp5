@@ -1,3 +1,5 @@
+import math
+
 import pygame.mixer
 from pygame.locals import *
 
@@ -43,6 +45,19 @@ player_img = pygame.image.load('textures/perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
+#######################################################################################################
+#######################################################################################################
+#######################################################################################################
+# Variables de la balle :
+v0 = 60
+angleRad = math.radians(65)
+vitesseInitialeX = v0 * math.cos(angleRad)
+vitesseInitialeY = -v0 * math.sin(angleRad)
+
+
+#######################################################################################################
+#######################################################################################################
+#######################################################################################################
 
 def event_manager():
     global x, y
@@ -84,9 +99,12 @@ def event_manager():
                     jumpSound.set_volume(model.val_sound / 100)
                     jumpSound.play()
                     model.speedY = (8 * model.jumpSpeed / 10) + (2 * model.jumpSpeed / 10) * (
-                                abs(model.fallSpeedX) / model.speedMaxX)
+                            abs(model.fallSpeedX) / model.speedMaxX)
                     model.falling.pop(0)
                     model.falling.append(1)
+            if event.key == K_h:
+                model.ball_cpt += 1
+                create_ball(model.liste_ball, vitesseInitialeX, vitesseInitialeY)
         if event.type == KEYUP:
             if event.key == K_RIGHT or event.key == K_d:
                 model.moving_right = False
@@ -125,7 +143,6 @@ def game():
     elif model.moving_left and (not model.moving_right):
         model.fallSpeedX -= model.accX
     else:
-
         if model.fallSpeedX > 0:
             model.fallSpeedX -= model.accX
             print("right speed reducing")
@@ -203,6 +220,8 @@ def game():
     if model.display_dead != 0:
         screen.blit(text2, (400, 100))
     life_left()
+    lancer_ball(model.liste_ball)
+
     pygame.display.update()
     clock.tick(60)
 
