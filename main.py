@@ -1,6 +1,7 @@
 import pygame.mixer
 from pygame.locals import *
 import math
+import spritesheet
 
 from functions import *
 from menu import menu
@@ -39,13 +40,9 @@ tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd':
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
-player_img = pygame.image.load('textures/perso.png')
-player_img = pygame.transform.scale_by(player_img, 0.04)
+sprite_sheet_image = player_img = pygame.image.load('spritesheet.png').convert_alpha()
 player_img.set_colorkey((255, 255, 255))
-
-
-#######################################################################################################
-#######################################################################################################
+sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
 #######################################################################################################
 #Variables de la balle :
 v0 = 60
@@ -53,15 +50,17 @@ angleRad = math.radians(65)
 vitesseInitialeX = v0 * math.cos(angleRad)
 vitesseInitialeY = -v0 * math.sin(angleRad)
 #######################################################################################################
+black = 0, 0, 0
+animation_list = []
+animation_step = 8
+
+for i in range(animation_step):
+    player_img = (sprite_sheet.get_image(i, 64, 64, 1.5, black)) # pygame.transform.scale_by(player_img, 0.04)
+                #animation_list.append        a mettre la
 #######################################################################################################
-#######################################################################################################
-
-
-
 now = 0
 level = 1
 derniereaction = 0
-
 
 def event_manager():
     global x, y
@@ -140,6 +139,9 @@ def game():
             x += 1
         y += 1
     spike_level(model.level)
+    #player animation"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+    pygame.display.update()  # Met à jour l'affichage ( ou mettre flip)
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
     if model.moving_right:
