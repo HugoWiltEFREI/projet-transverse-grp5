@@ -25,7 +25,6 @@ jumpSound = pygame.mixer.Sound("musics/maro-jump-sound-effect_1.mp3")
 deathSound = pygame.mixer.Sound("musics/minecraft_hit_soundmp3converter.mp3")
 liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
                "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav"]
-
 grassimage = pygame.image.load("textures/grassMid.png")
 grasscenter = pygame.image.load("textures/grassCenter.png")
 bow = pygame.image.load("textures/bow.png")
@@ -34,6 +33,7 @@ bluegrassMid = pygame.image.load("textures/grassMiddleBlue.png")
 darkBlock = pygame.image.load("textures/texture mario underground.png")
 portal_entrance = pygame.image.load("textures/entrance_portal.png")
 portal_exit = pygame.image.load("textures/exit_portal.png")
+ball_image = pygame.image.load("textures/ball_png.png")
 
 tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
@@ -43,11 +43,10 @@ player_img = pygame.image.load('textures/perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
-
 #######################################################################################################
 #######################################################################################################
 #######################################################################################################
-#Variables de la balle :
+# Variables de la balle :
 v0 = 60
 angleRad = math.radians(65)
 vitesseInitialeX = v0 * math.cos(angleRad)
@@ -55,7 +54,6 @@ vitesseInitialeY = -v0 * math.sin(angleRad)
 #######################################################################################################
 #######################################################################################################
 #######################################################################################################
-
 
 
 now = 0
@@ -105,15 +103,18 @@ def event_manager():
                     model.momentum = 10
                     model.falling.pop(0)
                     model.falling.append(1)
-            if event.key == K_h :
+            if event.key == K_h:
                 model.ball_cpt += 1
-                create_ball(model.liste_ball, vitesseInitialeX, vitesseInitialeY)
+                if not (model.stay_right):
+                    create_ball(model.liste_ball, -vitesseInitialeX, vitesseInitialeY)
+                else:
+                    create_ball(model.liste_ball, vitesseInitialeX, vitesseInitialeY)
         if event.type == KEYUP:
             if event.key == K_RIGHT or event.key == K_d:
                 model.moving_right = False
             if event.key == K_LEFT or event.key == K_q:
                 model.moving_left = False
-            if event.key == K_h :
+            if event.key == K_h:
                 model.balle_lancee = False
 
 
@@ -202,11 +203,11 @@ def game():
         screen.blit(text2, (400, 100))
     life_left()
 
-    lancer_ball(model.liste_ball)
-
+    lancer_ball(model.liste_ball, ball_image, tile_rects)
 
     pygame.display.update()
     clock.tick(60)
+
 
 pygame.mixer.music.load(liste_music[model.level - 1])
 pygame.mixer.music.play()

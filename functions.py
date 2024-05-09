@@ -122,18 +122,47 @@ def forward_lvl():
 
 
 def create_ball(liste, vX, vY):
-    liste.append({"x": player_rect.x, "y": player_rect.y, "vx" :vX, "vy":vY})
+    liste.append({"x": player_rect.x, "y": player_rect.y, "vx": vX, "vy": vY, "rebond_count": 0})
 
 
-def lancer_ball(liste):
+def lancer_ball(liste, ball_image, list_tiles):
     for ball in liste:
-        pygame.draw.circle(screen, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]), model.BALL_RADIUS)
+        if ball["rebond_count"] < 5:
+            # pygame.draw.circle(screen, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]),model.BALL_RADIUS)
+            ball_rect = ball_image.get_rect()
+            ball_rect.x = round(ball["x"]) - scroll[0]
+            ball_rect.y = round(ball["y"]) - scroll[1]
+            #screen.blit(ball_image, (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]))
+            screen.blit(ball_image,ball_rect)
+            pygame.draw.rect(screen, "red", ball_rect, 2)
+            ball["x"] += ball["vx"] * model.temps
+            ball["y"] += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
 
-        ball["x"] += ball["vx"] * model.temps
-        ball["y"] += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
+            hit_list_ball = collision_test(ball_rect,list_tiles)
+            for tile in hit_list_ball:
+                if ball_rect.right > tile[0].left and ball_rect.left < tile[0].left:
+                    ball["x"] = tile[0].left
+                elif ball_rect.left < tile[0].right and ball_rect.right > tile[0].right:
+                    ball["x"] = tile[0].right
+                elif ball_rect.bottom > tile[0].top and ball_rect.top < tile[0].top:
+                    ball["y"] = tile[0].top
+                    ball["vy"] = -ball["vy"] * 0.9
+                elif ball_rect.top < tile[0].bottom and ball_rect.bottom > tile[0].bottom:
+                    ball["y"] = tile[0].bottom
+                    ball["vy"] = -ball["vy"] * 1.5
+                #ball["rebond_count"] += 1
+            print(hit_list_ball)
 
-        if ball["y"] >= 1000 - model.BALL_RADIUS:
-            ball["y"] = 1000 - model.BALL_RADIUS
-            ball["vy"] = -ball["vy"] * 0.9
 
-        ball["vy"] += model.gravite * model.temps
+            """
+            for tile in hit_list:
+                if movement[1] > 0:
+                    rect.bottom = tile[0].top
+                    collision_types['bottom'] = True
+                elif movement[1] < 0:
+                    rect.top = tile[0].bottom
+                    collision_types['top'] = True
+                collisionPortal(tile)
+            return rect, collision_types"""
+
+            ball["vy"] += model.gravite * model.temps
