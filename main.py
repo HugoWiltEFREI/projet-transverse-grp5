@@ -1,4 +1,5 @@
 import math
+from random import randint
 
 import pygame.mixer
 from pygame.locals import *
@@ -13,6 +14,7 @@ clock = pygame.time.Clock()
 pygame.display.set_caption('Game')
 game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
 text = game_font.render("PRESS E", False, "brown")
+coucou = game_font.render("COUCOU", False, "brown")
 zone_de_text = ""
 
 moving_right = False
@@ -37,6 +39,14 @@ bluegrassMid = pygame.image.load("textures/grassMiddleBlue.png")
 darkBlock = pygame.image.load("textures/texture mario underground.png")
 portal_entrance = pygame.image.load("textures/entrance_portal.png")
 portal_exit = pygame.image.load("textures/exit_portal.png")
+cloud1 = pygame.image.load("textures/Split_document/Cloud1.png")
+cloud2 = pygame.image.load("textures/Split_document/Cloud2.png")
+cloud3 = pygame.image.load("textures/Split_document/Cloud3.png")
+cloud4 = pygame.image.load("textures/Split_document/Cloud4.png")
+cloud5 = pygame.image.load("textures/Split_document/Cloud5.png")
+cloud6 = pygame.image.load("textures/Split_document/Cloud6.png")
+clouds = [cloud1, cloud2, cloud3, cloud4, cloud5, cloud6]
+star = pygame.image.load("textures/star.png")
 
 tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
@@ -65,6 +75,15 @@ sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
 
 for i in range(animation_step):
     animation_list.append(sprite_sheet.get_image(i, 64, 64, 1, black))
+
+list_cloud_x = []
+liste_cloud_y = []
+
+for i in range(40):
+    list_cloud_x.append(randint(100, 400) + 100 * i)
+    liste_cloud_y.append(randint(100, 250))
+
+star_coords = (randint(1000, 1500), randint(100, 200))
 
 
 def event_manager():
@@ -123,6 +142,13 @@ def event_manager():
 def game():
     global y, x, player_rect, statut
     display.fill((146, 244, 255))
+    model.cloud_time += 1
+    for i in range(len(list_cloud_x)):
+        display.blit(clouds[(i % 5) + 1], (list_cloud_x[i] - model.cloud_time, liste_cloud_y[i]))
+    if model.cloud_time > 250:
+        model.star_time += 1
+        display.blit(star, (star_coords[0] - model.star_time * 50, star_coords[1] + model.star_time * 10))
+
     if player_rect.x > 950:
         scroll[0] = player_rect.x - 950
     if player_rect.y < 150:
@@ -188,15 +214,14 @@ def game():
         model.fallSpeedX = 0
     # Flip the player image when goes to the left
     if model.player_velocity_multi == 1:
-        if model.stay_right:
+        if not model.stay_right:
             for x in range(animation_step):
-                display.blit(animation_list[x], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
-
+                display.blit(animation_list[x], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 15))
         else:
             for x in range(animation_step):
                 display.blit(
                     pygame.transform.flip(animation_list[x], True, False),
-                    (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
+                    (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 15))
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and model.affichage == 1:
         display.blit(text, (800, 875))
@@ -207,6 +232,7 @@ def game():
     elif model.level == 2:
         isinspike1 = isinzone(850 + 200, player_rect.x, 915 + 200, 490, player_rect.y + 30, 510)
         isinspike2 = isinzone(1085 + 200, player_rect.x, 1150 + 200, 490, player_rect.y + 30, 510)
+
     else:
         isinspike1 = False
         isinspike2 = False
@@ -223,6 +249,7 @@ def game():
     diedFromVoid(player_rect.y)
     event_manager()
     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
+
     screen.blit(cpteur, (30, 30))
     screen.blit(portal_entrance, (10 - scroll[0], 40 - scroll[1]))
     if model.affichage != 0:
@@ -231,7 +258,6 @@ def game():
         screen.blit(text2, (400, 100))
     life_left()
     lancer_ball(model.liste_ball)
-
     pygame.display.update()
     clock.tick(60)
 

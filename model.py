@@ -20,12 +20,14 @@ falling = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 val_sound = 50
 val_music = 50
 is_running = True
+cloud_time = 0
+star_time = 0
 accX = 0.2
 accYp = 0.3
 accYn = 0.5
 speedMaxX = 6
 jumpSpeed = 10
-
+frame = 0
 # balle
 gravite = 9.81
 BALL_RADIUS = 10

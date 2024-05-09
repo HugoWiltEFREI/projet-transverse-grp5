@@ -10,7 +10,7 @@ screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
 heart = pygame.image.load("textures/hud_heartFull.png")
 spike = pygame.image.load("textures/spike.png")
 scroll = [0, 0]
-player_rect = pygame.Rect(25, 25, 30, 40)
+player_rect = pygame.Rect(25, 25, 30, 45)
 
 
 def is_dead(event):
