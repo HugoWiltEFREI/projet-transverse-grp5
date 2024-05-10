@@ -21,7 +21,6 @@ is_running = True
 
 # Variables de la balle
 gravite = 9.81
-BALL_RADIUS = 7
 balle_lancee = False
 ball_cpt = 0
 temps = 0.5

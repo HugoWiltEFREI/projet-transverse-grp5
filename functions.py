@@ -28,11 +28,13 @@ def collision_test(rect, tiles):
 
 
 def move(rect, movement, tiles):
+    pygame.draw.rect(display,"yellow",rect,2)
     collision_types = {
         'top': False, 'bottom': False, 'right': False, 'left': False}
     rect.x += movement[0]
     hit_list = collision_test(rect, tiles)
     for tile in hit_list:
+        pygame.draw.rect(display, "green", tile[0], 2)
         if movement[0] > 0:
             rect.right = tile[0].left
             collision_types['right'] = True
@@ -44,6 +46,7 @@ def move(rect, movement, tiles):
     rect.y += movement[1]
     hit_list = collision_test(rect, tiles)
     for tile in hit_list:
+        pygame.draw.rect(display, "green", tile[0], 2)
         if movement[1] > 0:
             rect.bottom = tile[0].top
             collision_types['bottom'] = True
@@ -122,34 +125,39 @@ def forward_lvl():
 
 
 def create_ball(liste, vX, vY):
-    liste.append({"x": player_rect.x, "y": player_rect.y, "vx": vX, "vy": vY, "rebond_count": 0})
+    liste.append({"vx": vX, "vy": vY, "rebond_count": 0, "rect": False})
 
 
 def lancer_ball(liste, ball_image, list_tiles):
     for ball in liste:
+        if not(ball["rect"]):
+            ball["rect"] = ball_image.get_rect()
+            ball["rect"].x = player_rect.x
+            ball["rect"].y = player_rect.y
         if ball["rebond_count"] < 5:
-            # pygame.draw.circle(screen, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]),model.BALL_RADIUS)
-            ball_rect = ball_image.get_rect()
-            ball_rect.x = round(ball["x"]) - scroll[0]
-            ball_rect.y = round(ball["y"]) - scroll[1]
-            #screen.blit(ball_image, (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]))
-            screen.blit(ball_image,ball_rect)
-            pygame.draw.rect(screen, "red", ball_rect, 2)
-            ball["x"] += ball["vx"] * model.temps
-            ball["y"] += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
+            # pygame.draw.circle(display, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]),model.BALL_RADIUS)
+            ball["rect"].x += ball["vx"] * model.temps
+            ball["rect"].y += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
+            #display.blit(ball_image, (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]))
+            display.blit(ball_image,(ball["rect"].x - scroll[0], ball["rect"].y - scroll[1]))
+            pygame.draw.rect(display, "red", ball["rect"], 2)
 
-            hit_list_ball = collision_test(ball_rect,list_tiles)
+
+
+            hit_list_ball = collision_test(ball["rect"],list_tiles)
             for tile in hit_list_ball:
-                if ball_rect.right > tile[0].left and ball_rect.left < tile[0].left:
+                """if ball["rect"].right > tile[0].left and ball["rect"].left < tile[0].left:
                     ball["x"] = tile[0].left
-                elif ball_rect.left < tile[0].right and ball_rect.right > tile[0].right:
-                    ball["x"] = tile[0].right
-                elif ball_rect.bottom > tile[0].top and ball_rect.top < tile[0].top:
-                    ball["y"] = tile[0].top
-                    ball["vy"] = -ball["vy"] * 0.9
-                elif ball_rect.top < tile[0].bottom and ball_rect.bottom > tile[0].bottom:
-                    ball["y"] = tile[0].bottom
-                    ball["vy"] = -ball["vy"] * 1.5
+                elif ball["rect"].left < tile[0].right and ball["rect"].right > tile[0].right:
+                    ball["x"] = tile[0].right"""
+                if ball["rect"].bottom > tile[0].top - 21:
+                    #ball["y"] = tile[0].top
+                    ball["rect"].bottom = tile[0].top - 21
+                    ball["vy"] = -ball["vy"] * 0.8
+                elif ball["rect"].top < tile[0].bottom :
+                    ball["rect"].top = tile[0].bottom
+                    ball["vy"] = -ball["vy"]
+                pygame.draw.rect(display, "magenta", tile[0], 2)
                 #ball["rebond_count"] += 1
             print(hit_list_ball)
 

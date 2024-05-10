@@ -133,13 +133,13 @@ def game():
         for symbol in line_of_symbols:
             if symbol in tl:
                 # Blit des images avec coords
-                display.blit(
-                    tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
+                display.blit(tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
                 tile_rects.append((pygame.Rect(x * 64, y * 64, 64, 64), symbol))
             x += 1
         y += 1
+
     spike_level(model.level)
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
@@ -151,6 +151,9 @@ def game():
     if model.falling[-1]:
         model.momentum -= 0.3 * model.player_velocity_multi
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
+
+    lancer_ball(model.liste_ball, ball_image, tile_rects)
+
     if collisions['bottom']:
         model.momentum = 0
         model.falling.append(0)
@@ -203,10 +206,9 @@ def game():
         screen.blit(text2, (400, 100))
     life_left()
 
-    lancer_ball(model.liste_ball, ball_image, tile_rects)
 
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(360)
 
 
 pygame.mixer.music.load(liste_music[model.level - 1])
