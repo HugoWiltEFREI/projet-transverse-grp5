@@ -1,8 +1,9 @@
+import math
+
 import pygame.mixer
 from pygame.locals import *
-import math
-import spritesheet
 
+import spritesheet
 from functions import *
 from menu import menu
 
@@ -25,7 +26,8 @@ air_timer = 0
 jumpSound = pygame.mixer.Sound("musics/maro-jump-sound-effect_1.mp3")
 deathSound = pygame.mixer.Sound("musics/minecraft_hit_soundmp3converter.mp3")
 liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
-               "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav"]
+               "musics/Charlie-Parker-Donna-Lee.wav",
+               "musics/Undertale_Chill.wav"]
 
 grassimage = pygame.image.load("textures/grassMid.png")
 grasscenter = pygame.image.load("textures/grassCenter.png")
@@ -40,27 +42,35 @@ tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd':
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
-sprite_sheet_image = player_img = pygame.image.load('spritesheet.png').convert_alpha()
+player_img = pygame.image.load('textures/perso.png')
+player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
-sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
+
 #######################################################################################################
-#Variables de la balle :
+#######################################################################################################
+#######################################################################################################
+# Variables de la balle :
 v0 = 60
 angleRad = math.radians(65)
 vitesseInitialeX = v0 * math.cos(angleRad)
 vitesseInitialeY = -v0 * math.sin(angleRad)
 #######################################################################################################
+#######################################################################################################
+#######################################################################################################
 black = 0, 0, 0
 animation_list = []
 animation_step = 8
+last_update = pygame.time.get_ticks()
+animation_cooldown = 100
+
+
+sprite_sheet_image = player_img = pygame.image.load('textures/spritesheet.png').convert_alpha()
+sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
+
 
 for i in range(animation_step):
-    player_img = (sprite_sheet.get_image(i, 64, 64, 1.5, black)) # pygame.transform.scale_by(player_img, 0.04)
-                #animation_list.append        a mettre la
-#######################################################################################################
-now = 0
-level = 1
-derniereaction = 0
+    animation_list.append(sprite_sheet.get_image(i, 64, 64, 1, black))
+
 
 def event_manager():
     global x, y
@@ -101,10 +111,11 @@ def event_manager():
                 if 0 in model.falling:
                     jumpSound.set_volume(model.val_sound / 100)
                     jumpSound.play()
-                    model.momentum = 10
+                    model.speedY = (8 * model.jumpSpeed / 10) + (2 * model.jumpSpeed / 10) * (
+                            abs(model.fallSpeedX) / model.speedMaxX)
                     model.falling.pop(0)
                     model.falling.append(1)
-            if event.key == K_h :
+            if event.key == K_h:
                 model.ball_cpt += 1
                 create_ball(model.liste_ball, vitesseInitialeX, vitesseInitialeY)
         if event.type == KEYUP:
@@ -112,8 +123,6 @@ def event_manager():
                 model.moving_right = False
             if event.key == K_LEFT or event.key == K_q:
                 model.moving_left = False
-            if event.key == K_h :
-                model.balle_lancee = False
 
 
 def game():
@@ -139,37 +148,76 @@ def game():
             x += 1
         y += 1
     spike_level(model.level)
-    #player animation"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# animation of the player
 
-    pygame.display.update()  # Met à jour l'affichage ( ou mettre flip)
+    last_update = pygame.time.get_ticks()
+    for i in range(animation_step):
+        display.blit(animation_list[model.frame], (x * 72,0))
+
+    #update animation
+    current_time = pygame.time.get_ticks()
+    if current_time - last_update >= animation_cooldown:
+        model.frame += 1
+        #
+        if model.frame >= animation_step:
+            model.frame = 0  # Réinitialiser la frame à 0 lorsque nous avons parcouru toutes les frames
+        last_update = current_time
+
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
-    if model.moving_right:
-        player_movement[0] += 6 * model.player_velocity_multi
-    if model.moving_left:
-        player_movement[0] -= 6 * model.player_velocity_multi
-    player_movement[1] -= model.momentum
+    player_movement[0] += model.fallSpeedX
+    if model.moving_right and (not model.moving_left):
+        model.fallSpeedX += model.accX
+    elif model.moving_left and (not model.moving_right):
+        model.fallSpeedX -= model.accX
+    else:
+        if model.fallSpeedX > 0:
+            model.fallSpeedX -= model.accX
+            print("right speed reducing")
+            if model.fallSpeedX < 0:
+                model.fallSpeedX = 0
+        if model.fallSpeedX < 0:
+            model.fallSpeedX += model.accX
+            print("left speed reducing", model.fallSpeedX)
+            if model.fallSpeedX > 0:
+                model.fallSpeedX = 0
+    if model.fallSpeedX > model.speedMaxX:
+        model.fallSpeedX = model.speedMaxX
+    if model.fallSpeedX < -1 * model.speedMaxX:
+        model.fallSpeedX = -1 * model.speedMaxX
+
+    player_movement[1] -= model.speedY
     if model.falling[-1]:
-        model.momentum -= 0.3 * model.player_velocity_multi
+        if model.speedY > 0:
+            model.speedY -= model.accYp * model.player_velocity_multi
+        else:
+            model.speedY -= model.accYn * model.player_velocity_multi
     player_rect, collisions = move(player_rect, player_movement, tile_rects)
     if collisions['bottom']:
-        model.momentum = 0
+        model.speedY = 0
         model.falling.append(0)
         model.falling.pop(0)
     else:
         model.falling.append(1)
         model.falling.pop(0)
     if collisions["top"]:
-        model.momentum *= -1
-    # Flip the player image when goes to the left
+        model.speedY *= -1
+    if collisions["left"] and model.fallSpeedX < 0:
+        model.fallSpeedX = 0
+    if collisions["right"] and model.fallSpeedX > 0:
+        model.fallSpeedX = 0
+    #Flip the player image when goes to the left
     if model.player_velocity_multi == 1:
-        if model.stay_right:
-            display.blit(
-                player_img, (player_rect.x - scroll[0], player_rect.y - scroll[1]))
+        if not model.stay_right:
+            for x in range(animation_step):
+                display.blit(animation_list[x], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
+
         else:
-            display.blit(
-                pygame.transform.flip(player_img, True, False),
-                (player_rect.x - scroll[0], player_rect.y - scroll[1]))
+            for x in range(animation_step):
+                display.blit(
+                    pygame.transform.flip(animation_list[x], True, False),
+                    (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
+
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and model.affichage == 1:
         display.blit(text, (800, 875))
@@ -203,12 +251,11 @@ def game():
     if model.display_dead != 0:
         screen.blit(text2, (400, 100))
     life_left()
-
     lancer_ball(model.liste_ball)
-
 
     pygame.display.update()
     clock.tick(60)
+
 
 pygame.mixer.music.load(liste_music[model.level - 1])
 pygame.mixer.music.play()

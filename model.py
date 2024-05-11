@@ -9,7 +9,9 @@ zone_de_text = ""
 moving_right = False
 moving_left = False
 stay_right = True
-momentum = 0
+speedX = 6
+speedY = 0
+fallSpeedX = 0
 now = 0
 level = 1
 derniereaction = 0
@@ -18,8 +20,13 @@ falling = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 val_sound = 50
 val_music = 50
 is_running = True
+accX = 0.2
+accYp = 0.3
+accYn = 0.5
+speedMaxX = 6
+jumpSpeed = 10
 
-# Variables de la balle
+# balle
 gravite = 9.81
 BALL_RADIUS = 10
 balle_lancee = False
@@ -29,3 +36,4 @@ liste_ball = []
 # Positions de la balle :
 ball_x = 0
 ball_y = 0
+frame = 0
