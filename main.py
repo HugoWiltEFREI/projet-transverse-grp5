@@ -151,8 +151,6 @@ def game():
 # animation of the player
 
     last_update = pygame.time.get_ticks()
-    for i in range(animation_step):
-        display.blit(animation_list[model.frame], (x * 72,0))
 
     #update animation
     current_time = pygame.time.get_ticks()
@@ -211,7 +209,6 @@ def game():
         if not model.stay_right:
             for x in range(animation_step):
                 display.blit(animation_list[x], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
-
         else:
             for x in range(animation_step):
                 display.blit(
