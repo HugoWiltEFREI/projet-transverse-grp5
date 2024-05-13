@@ -132,12 +132,12 @@ def lancer_ball(liste, ball_image, list_tiles):
     for ball in liste:
         if not(ball["rect"]):
             ball["rect"] = ball_image.get_rect()
-            ball["rect"].x = player_rect.x
-            ball["rect"].y = player_rect.y
+            ball["rect"].left = player_rect.left
+            ball["rect"].bottom = player_rect.bottom
         if ball["rebond_count"] < 5:
             # pygame.draw.circle(display, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]),model.BALL_RADIUS)
-            ball["rect"].x += ball["vx"] * model.temps
-            ball["rect"].y += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
+            ball["rect"].left += ball["vx"] * model.temps
+            ball["rect"].bottom += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
             #display.blit(ball_image, (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]))
             display.blit(ball_image,(ball["rect"].x - scroll[0], ball["rect"].y - scroll[1]))
             pygame.draw.rect(display, "red", ball["rect"], 2)
@@ -151,14 +151,16 @@ def lancer_ball(liste, ball_image, list_tiles):
                 elif ball["rect"].left < tile[0].right and ball["rect"].right > tile[0].right:
                     ball["x"] = tile[0].right"""
                 if ball["rect"].bottom > tile[0].top - 21:
-                    #ball["y"] = tile[0].top
                     ball["rect"].bottom = tile[0].top - 21
-                    ball["vy"] = -ball["vy"] * 0.8
+                    ball["vy"] = -ball["vy"] * 0.9
+                    ball["rebond_count"] += 1
+                """
                 elif ball["rect"].top < tile[0].bottom :
                     ball["rect"].top = tile[0].bottom
                     ball["vy"] = -ball["vy"]
+                    #ball["rebond_count"] += 1"""
+
                 pygame.draw.rect(display, "magenta", tile[0], 2)
-                #ball["rebond_count"] += 1
             print(hit_list_ball)
 
 
