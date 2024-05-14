@@ -61,15 +61,15 @@ black = 0, 0, 0
 animation_list = []
 animation_step = 8
 last_update = pygame.time.get_ticks()
-animation_cooldown = 100
+animation_cooldown = 75
 
 
 sprite_sheet_image = player_img = pygame.image.load('textures/spritesheet.png').convert_alpha()
 sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
 
-
 for i in range(animation_step):
     animation_list.append(sprite_sheet.get_image(i, 64, 64, 1, black))
+
 
 
 def event_manager():
@@ -126,6 +126,10 @@ def event_manager():
 
 
 def game():
+
+    if model.speedX > 7:
+        pass
+
     global y, x, player_rect, statut
     display.fill((146, 244, 255))
     if player_rect.x > 950:
@@ -148,18 +152,14 @@ def game():
             x += 1
         y += 1
     spike_level(model.level)
-# animation of the player
-
+    # animation of the player
     last_update = pygame.time.get_ticks()
-
-    #update animation
     current_time = pygame.time.get_ticks()
     if current_time - last_update >= animation_cooldown:
         model.frame += 1
-        #
-        if model.frame >= animation_step:
-            model.frame = 0  # Réinitialiser la frame à 0 lorsque nous avons parcouru toutes les frames
         last_update = current_time
+        if model.frame >= animation_step:
+            model.frame = 0
 
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
@@ -204,16 +204,20 @@ def game():
         model.fallSpeedX = 0
     if collisions["right"] and model.fallSpeedX > 0:
         model.fallSpeedX = 0
+
     #Flip the player image when goes to the left
     if model.player_velocity_multi == 1:
         if not model.stay_right:
-            for x in range(animation_step):
-                display.blit(animation_list[x], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
+            #for x in range(animation_step):
+            display.blit(animation_list[model.x], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
+            model.x = (model.x+1)%8
         else:
-            for x in range(animation_step):
+
+            # for i in range(animation_step):
                 display.blit(
-                    pygame.transform.flip(animation_list[x], True, False),
+                    pygame.transform.flip(animation_list[model.i], True, False),
                     (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
+                model.i = (model.i + 1) % 8
 
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and model.affichage == 1:
