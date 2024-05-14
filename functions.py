@@ -121,19 +121,24 @@ def forward_lvl():
 
 
 def create_ball(liste, vX, vY):
-    liste.append({"x": player_rect.x, "y": player_rect.y, "vx": vX, "vy": vY})
+    liste.append({"x": player_rect.x, "y": player_rect.y, "vx": vX, "vy": vY, "rebond_count": 0})
 
 
-def lancer_ball(liste):
+def lancer_ball(liste, ball_image, list_tiles):
     for ball in liste:
-        pygame.draw.circle(screen, "red", (round(ball["x"]) - scroll[0] + 30, round(ball["y"]) - scroll[1] + 30),
-                           model.BALL_RADIUS)
+        if ball["rebond_count"] < 5:
+            # pygame.draw.circle(screen, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]),model.BALL_RADIUS)
+            ball_rect = ball_image.get_rect()
+            ball_rect.x = ball["x"] - scroll[0]
+            ball_rect.y = ball["y"] - scroll[1]
+            # screen.blit(ball_image, (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]))
+            screen.blit(ball_image, ball_rect)
+            pygame.draw.rect(screen, "red", ball_rect, 2)
+            ball["x"] += ball["vx"] * model.temps
+            ball["y"] += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
 
-        ball["x"] += ball["vx"] * model.temps
-        ball["y"] += (ball["vy"] * model.temps) + (0.5 * model.gravxite * model.temps ** 2)
-
-        if ball["y"] >= 1000 - model.BALL_RADIUS:
-            ball["y"] = 1000 - model.BALL_RADIUS
-            ball["vy"] = -ball["vy"] * 0.9
-
-        ball["vy"] += model.gravite * model.temps
+            hit_list_ball = collision_test(ball_rect, list_tiles)
+            for tile in hit_list_ball:
+                pygame.draw.rect(screen, "magenta", tile[0], 2)
+            print(hit_list_ball)
+            ball["vy"] += model.gravite * model.temps

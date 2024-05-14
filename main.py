@@ -47,6 +47,7 @@ cloud5 = pygame.image.load("textures/Split_document/Cloud5.png")
 cloud6 = pygame.image.load("textures/Split_document/Cloud6.png")
 clouds = [cloud1, cloud2, cloud3, cloud4, cloud5, cloud6]
 star = pygame.image.load("textures/star.png")
+ball_image = pygame.image.load("textures/ball_png.png")
 
 tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
@@ -131,7 +132,10 @@ def event_manager():
                     model.falling.append(1)
             if event.key == K_h:
                 model.ball_cpt += 1
-                create_ball(model.liste_ball, vitesseInitialeX, vitesseInitialeY)
+                if not model.stay_right:
+                    create_ball(model.liste_ball, -vitesseInitialeX, vitesseInitialeY)
+                else:
+                    create_ball(model.liste_ball, vitesseInitialeX, vitesseInitialeY)
         if event.type == KEYUP:
             if event.key == K_RIGHT or event.key == K_d:
                 model.moving_right = False
@@ -179,19 +183,16 @@ def game():
     else:
         if model.fallSpeedX > 0:
             model.fallSpeedX -= model.accX
-            print("right speed reducing")
             if model.fallSpeedX < 0:
                 model.fallSpeedX = 0
         if model.fallSpeedX < 0:
             model.fallSpeedX += model.accX
-            print("left speed reducing", model.fallSpeedX)
             if model.fallSpeedX > 0:
                 model.fallSpeedX = 0
     if model.fallSpeedX > model.speedMaxX:
         model.fallSpeedX = model.speedMaxX
     if model.fallSpeedX < -1 * model.speedMaxX:
         model.fallSpeedX = -1 * model.speedMaxX
-
     player_movement[1] -= model.speedY
     if model.falling[-1]:
         if model.speedY > 0:
@@ -257,7 +258,7 @@ def game():
     if model.display_dead != 0:
         screen.blit(text2, (400, 100))
     life_left()
-    lancer_ball(model.liste_ball)
+    lancer_ball(model.liste_ball, ball_image, tile_rects)
     pygame.display.update()
     clock.tick(60)
 
