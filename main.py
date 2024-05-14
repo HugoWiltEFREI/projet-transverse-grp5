@@ -72,7 +72,7 @@ def event_manager():
                 if 0 in model.falling:
                     jumpSound.set_volume(model.val_sound / 100)
                     jumpSound.play()
-                    model.speedY = (8*model.jumpSpeed/10) + (2*model.jumpSpeed/10)*(abs(model.fallSpeedX)/model.speedMaxX)**5
+                    model.speedY = (7*model.jumpSpeed/10) + (3*model.jumpSpeed/10)*(abs(model.fallSpeedX)/model.speedMaxX)**5
                     model.falling.pop(0)
                     model.falling.append(1)
         if event.type == KEYUP:
