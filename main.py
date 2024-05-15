@@ -58,17 +58,28 @@ vitesseInitialeY = -v0 * math.sin(angleRad)
 #######################################################################################################
 #######################################################################################################
 black = 0, 0, 0
+animation_list_walk = []
+animation_list_jump = []
+animation_list_inert = []
 animation_list = []
+animation_speed_divisor = 5
+animation_counter = 0
+
 animation_step = 8
 last_update = pygame.time.get_ticks()
-animation_cooldown = 75
+animation_cooldown = 1
 
-
-sprite_sheet_image = player_img = pygame.image.load('textures/spritesheet.png').convert_alpha()
+sprite_sheet_image = player_img = pygame.image.load('textures/spritesheet2.png').convert_alpha()
 sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
 
-for i in range(animation_step):
-    animation_list.append(sprite_sheet.get_image(i, 64, 64, 1, black))
+for i in range(animation_step): #pour la marche
+    animation_list_walk.append(sprite_sheet.get_image(i, 64, 64, 1, black, 576))
+
+for j in range(animation_step): # pour le saut
+    animation_list_jump.append(sprite_sheet.get_image(j, 64, 64, 1, black, 64))
+
+for k in range(animation_step): # pour le stationaire
+    animation_list_inert.append(sprite_sheet.get_image(k, 64, 64, 1, black, 640))
 
 
 
@@ -108,6 +119,7 @@ def event_manager():
                 model.moving_left = True
                 model.stay_right = False
             if event.key == K_SPACE or event.key == K_UP or event.key == K_z:
+                animation_list = animation_list_jump
                 if 0 in model.falling:
                     jumpSound.set_volume(model.val_sound / 100)
                     jumpSound.play()
@@ -125,12 +137,141 @@ def event_manager():
                 model.moving_left = False
 
 
+# def game():
+#     global y, x, player_rect, statut
+#     display.fill((146, 244, 255))
+#     if player_rect.x > 950:
+#         scroll[0] = player_rect.x - 950
+#     if player_rect.y < 150:
+#         scroll[1] = player_rect.y - 540
+#     # Affichage des blocks
+#     tile_rects = []
+#     y = 0
+#     for line_of_symbols in select_map(model.level):
+#         x = 0
+#         for symbol in line_of_symbols:
+#             if symbol in tl:
+#                 # Blit des images avec coords
+#                 display.blit(
+#                     tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
+#             # Hitboxs pour les images avec collisions
+#             if symbol != "-" and symbol != "O":
+#                 tile_rects.append((pygame.Rect(x * 64, y * 64, 64, 64), symbol))
+#             x += 1
+#         y += 1
+#     spike_level(model.level)
+#     # animation of the player
+#     last_update = pygame.time.get_ticks()
+#     current_time = pygame.time.get_ticks()
+#     if current_time - last_update >= animation_cooldown:
+#         model.frame += 1
+#         last_update = current_time
+#         if model.frame >= animation_step:
+#             model.frame = 0
+#
+#     # MOVEMENT OF THE PLAYER
+#     player_movement = [0, 0]
+#     player_movement[0] += model.fallSpeedX
+#     if model.moving_right and (not model.moving_left):
+#         model.fallSpeedX += model.accX
+#     elif model.moving_left and (not model.moving_right):
+#         model.fallSpeedX -= model.accX
+#     else:
+#         if model.fallSpeedX > 0:
+#             model.fallSpeedX -= model.accX
+#             print("right speed reducing")
+#             if model.fallSpeedX < 0:
+#                 model.fallSpeedX = 0
+#         if model.fallSpeedX < 0:
+#             model.fallSpeedX += model.accX
+#             print("left speed reducing", model.fallSpeedX)
+#             if model.fallSpeedX > 0:
+#                 model.fallSpeedX = 0
+#     if model.fallSpeedX > model.speedMaxX:
+#         model.fallSpeedX = model.speedMaxX
+#     if model.fallSpeedX < -1 * model.speedMaxX:
+#         model.fallSpeedX = -1 * model.speedMaxX
+#
+#     player_movement[1] -= model.speedY
+#     if model.falling[-1]:
+#         if model.speedY > 0:
+#             model.speedY -= model.accYp * model.player_velocity_multi
+#         else:
+#             model.speedY -= model.accYn * model.player_velocity_multi
+#     player_rect, collisions = move(player_rect, player_movement, tile_rects)
+#     if collisions['bottom']:
+#         model.speedY = 0
+#         model.falling.append(0)
+#         model.falling.pop(0)
+#     else:
+#         model.falling.append(1)
+#         model.falling.pop(0)
+#     if collisions["top"]:
+#         model.speedY *= -1
+#     if collisions["left"] and model.fallSpeedX < 0:
+#         model.fallSpeedX = 0
+#     if collisions["right"] and model.fallSpeedX > 0:
+#         model.fallSpeedX = 0
+#
+#     #changement d'animation
+#     if model.fallSpeedX < 0 or model.fallSpeedX > 0:
+#         animation_list = animation_list_walk
+#     elif model.fallSpeedX == 0:
+#         animation_list = animation_list_inert
+#     elif model.speedY >0 or model.speedY < 0:
+#         animation_list = animation_list_jump
+#
+#     #Flip the player image when goes to the left
+#     if model.player_velocity_multi == 1:
+#         if not model.stay_right:
+#             #for x in range(animation_step):
+#             display.blit(animation_list[model.x], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
+#             model.x = (model.x+1)%8
+#         else:
+#                 display.blit(
+#                     pygame.transform.flip(animation_list[model.i], True, False),
+#                     (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
+#                 model.i = (model.i + 1) % 8
+#
+#     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
+#     if statut and model.affichage == 1:
+#         display.blit(text, (800, 875))
+#
+#     if model.level == 1:
+#         isinspike1 = isinzone(725, player_rect.x, 790, 490, player_rect.y + 30, 510)
+#         isinspike2 = isinzone(960, player_rect.x, 1025, 490, player_rect.y + 30, 510)
+#     elif model.level == 2:
+#         isinspike1 = isinzone(850 + 200, player_rect.x, 915 + 200, 490, player_rect.y + 30, 510)
+#         isinspike2 = isinzone(1085 + 200, player_rect.x, 1150 + 200, 490, player_rect.y + 30, 510)
+#     else:
+#         isinspike1 = False
+#         isinspike2 = False
+#
+#     if isinspike1 or isinspike2:
+#         if model.now - model.derniereaction > 2000:
+#             deathSound.set_volume(model.val_sound / 100)
+#             deathSound.play()
+#             model.number_of_life -= 1
+#             model.derniereaction = model.now
+#
+#     model.now = pygame.time.get_ticks()
+#     cpteur = game_font.render(str(model.zone_de_text), False, "brown")
+#     diedFromVoid(player_rect.y)
+#     event_manager()
+#     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
+#     screen.blit(cpteur, (30, 30))
+#     screen.blit(portal_entrance, (10 - scroll[0], 40 - scroll[1]))
+#     if model.affichage != 0:
+#         screen.blit(bow, (465 - scroll[0], 465 - scroll[1]))
+#     if model.display_dead != 0:
+#         screen.blit(text2, (400, 100))
+#     life_left()
+#     lancer_ball(model.liste_ball)
+#
+#     pygame.display.update()
+#     clock.tick(60)        def game innitiale
 def game():
-
-    if model.speedX > 7:
-        pass
-
-    global y, x, player_rect, statut
+    global y, x, player_rect, statut, animation_counter, last_update
     display.fill((146, 244, 255))
     if player_rect.x > 950:
         scroll[0] = player_rect.x - 950
@@ -143,23 +284,23 @@ def game():
         x = 0
         for symbol in line_of_symbols:
             if symbol in tl:
-                # Blit des images avec coords
-                display.blit(
-                    tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
-            # Hitboxs pour les images avec collisions
+                display.blit(tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             if symbol != "-" and symbol != "O":
                 tile_rects.append((pygame.Rect(x * 64, y * 64, 64, 64), symbol))
             x += 1
         y += 1
     spike_level(model.level)
-    # animation of the player
-    last_update = pygame.time.get_ticks()
+
+    # Update animation frame
     current_time = pygame.time.get_ticks()
     if current_time - last_update >= animation_cooldown:
-        model.frame += 1
         last_update = current_time
-        if model.frame >= animation_step:
-            model.frame = 0
+        animation_counter += 1
+        if animation_counter >= animation_speed_divisor:
+            model.frame += 1
+            animation_counter = 0
+            if model.frame >= animation_step:
+                model.frame = 0
 
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
@@ -171,12 +312,10 @@ def game():
     else:
         if model.fallSpeedX > 0:
             model.fallSpeedX -= model.accX
-            print("right speed reducing")
             if model.fallSpeedX < 0:
                 model.fallSpeedX = 0
         if model.fallSpeedX < 0:
             model.fallSpeedX += model.accX
-            print("left speed reducing", model.fallSpeedX)
             if model.fallSpeedX > 0:
                 model.fallSpeedX = 0
     if model.fallSpeedX > model.speedMaxX:
@@ -205,19 +344,21 @@ def game():
     if collisions["right"] and model.fallSpeedX > 0:
         model.fallSpeedX = 0
 
-    #Flip the player image when goes to the left
+    # Changement d'animation
+    if model.fallSpeedX != 0:
+        animation_list = animation_list_walk
+    elif momentum != 0:
+        animation_list = animation_list_jump
+    elif model.fallSpeedX == 0:
+        animation_list = animation_list_inert
+
+    # Affichage du joueur
     if model.player_velocity_multi == 1:
         if not model.stay_right:
-            #for x in range(animation_step):
-            display.blit(animation_list[model.x], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
-            model.x = (model.x+1)%8
+            display.blit(animation_list[model.frame], (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
         else:
-
-            # for i in range(animation_step):
-                display.blit(
-                    pygame.transform.flip(animation_list[model.i], True, False),
-                    (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
-                model.i = (model.i + 1) % 8
+            display.blit(pygame.transform.flip(animation_list[model.frame], True, False),
+                         (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
 
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and model.affichage == 1:
@@ -256,6 +397,7 @@ def game():
 
     pygame.display.update()
     clock.tick(60)
+
 
 
 pygame.mixer.music.load(liste_music[model.level - 1])
