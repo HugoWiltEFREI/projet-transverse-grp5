@@ -149,10 +149,15 @@ def lancer_ball(liste, ball_image, list_tiles):
             ball["rect_collision"].bottom = ball["rect"].bottom + ((ball["vy"] + model.gravite * model.temps) * model.temps) + (0.5 * model.gravite * model.temps ** 2)
             #pygame.draw.rect(display, "orange", ball["rect_collision"])
 
-            rect_final = pygame.Rect(ball["rect"].x, 0, 21, abs(ball["rect_collision"].y - ball["rect"].y))
-            rect_final.top = ball["rect"].top
-            rect_final.bottom = ball["rect_collision"].bottom
-            pygame.draw.rect(display, "green", rect_final)
+            rect_final_y = pygame.Rect(ball["rect"].x, 0, 21, abs(ball["rect_collision"].y - ball["rect"].y))
+            rect_final_y.top = ball["rect"].top
+            rect_final_y.bottom = ball["rect_collision"].bottom
+            pygame.draw.rect(display, "green", rect_final_y)
+
+            rect_final_x = pygame.Rect(0, ball["rect"].y, abs(ball["rect_collision"].x - ball["rect"].x), 21)
+            rect_final_x.left = ball["rect"].left
+            rect_final_x.right = ball["rect_collision"].right
+            pygame.draw.rect(display, "yellow", rect_final_x)
 
 
             # display.blit(ball_image, (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]))
@@ -171,16 +176,20 @@ def lancer_ball(liste, ball_image, list_tiles):
                 print(tile)
 
 
-                if tile[0].collidepoint(ball["rect_collision"].x, ball["rect_collision"].bottom) and (ball["rect"].y - ball["rect_collision"].y < 0):
+                if tile[0].collidepoint(rect_final_y.x, rect_final_y.bottom) :#and (ball["rect"].y - ball["rect_collision"].y < 0):
                     ball["rect"].bottom = tile[0].top
                     ball["vy"] = -ball["vy"] * 0.9
                     ball["rebond_count"] += 1
 
-                elif tile[0].collidepoint(ball["rect_collision"].x, ball["rect_collision"].top):
+                elif tile[0].collidepoint(rect_final_y.x, rect_final_y.top):
                     ball["rect"].bottom = tile[0].bottom
                     ball["vy"] = -ball["vy"] * 1.5
 
+                elif tile[0].collidepoint(rect_final_x.right, rect_final_x.y):
+                    ball["rebond_count"] = 5
 
+                elif tile[0].collidepoint(rect_final_x.left, rect_final_x.y):
+                    ball["rebond_count"] = 5
 
                 """
 
