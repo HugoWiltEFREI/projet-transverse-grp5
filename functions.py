@@ -125,7 +125,7 @@ def forward_lvl():
 
 
 def create_ball(liste, vX, vY):
-    liste.append({"vx": vX, "vy": vY, "rebond_count": 0, "rect": False, "rect_collision": None})
+    liste.append({"vx": vX, "vy": vY, "rebond_count": 0, "rect": False})
 
 
 def lancer_ball(liste, ball_image, list_tiles):
@@ -136,18 +136,24 @@ def lancer_ball(liste, ball_image, list_tiles):
             ball["rect"].bottom = player_rect.bottom
             ball["rect_collision"] = pygame.Rect(0, 0, 21, 21)
 
+
         if ball["rebond_count"] < 5:
             # pygame.draw.circle(display, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]),model.BALL_RADIUS)
             ball["rect"].left += ball["vx"] * model.temps
             ball["rect"].bottom += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
 
-            pygame.draw.rect(display, "purple", ball["rect_collision"])
-            print("purple : ", ball["rect_collision"].x, ball["rect_collision"].y)
+            #pygame.draw.rect(display, "purple", ball["rect"])
+            #print("purple : ", ball["rect_collision"].x, ball["rect_collision"].y)
 
             ball["rect_collision"].left = ball["rect"].left + (ball["vx"] + model.gravite * model.temps) * model.temps
-            ball["rect_collision"].bottom = ball["rect"].bottom + (
-                    (ball["vy"] + model.gravite * model.temps) * model.temps) + (
-                                                    0.5 * model.gravite * model.temps ** 2)
+            ball["rect_collision"].bottom = ball["rect"].bottom + ((ball["vy"] + model.gravite * model.temps) * model.temps) + (0.5 * model.gravite * model.temps ** 2)
+            #pygame.draw.rect(display, "orange", ball["rect_collision"])
+
+            rect_final = pygame.Rect(ball["rect"].x, 0, 21, abs(ball["rect_collision"].y - ball["rect"].y))
+            rect_final.top = ball["rect"].top
+            rect_final.bottom = ball["rect_collision"].bottom
+            pygame.draw.rect(display, "green", rect_final)
+
 
             # display.blit(ball_image, (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]))
             display.blit(ball_image, (ball["rect"].x - scroll[0], ball["rect"].y - scroll[1]))
@@ -162,6 +168,21 @@ def lancer_ball(liste, ball_image, list_tiles):
 
             hit_list_ball = collision_test(ball["rect_collision"], list_tiles)
             for tile in hit_list_ball:
+                print(tile)
+
+
+                if tile[0].collidepoint(ball["rect_collision"].x, ball["rect_collision"].bottom) and (ball["rect"].y - ball["rect_collision"].y < 0):
+                    ball["rect"].bottom = tile[0].top
+                    ball["vy"] = -ball["vy"] * 0.9
+                    ball["rebond_count"] += 1
+
+                elif tile[0].collidepoint(ball["rect_collision"].x, ball["rect_collision"].top):
+                    ball["rect"].bottom = tile[0].bottom
+                    ball["vy"] = -ball["vy"] * 1.5
+
+
+
+                """
 
                 test_right = abs(ball["rect"].right - tile[0].x)
                 test_left = abs(ball["rect"].left - tile[0].x)
@@ -202,3 +223,4 @@ def lancer_ball(liste, ball_image, list_tiles):
                 pygame.draw.rect(display, "magenta", tile[0], 2)
 
             ball["vy"] += model.gravite * model.temps
+        print(model.cpt)

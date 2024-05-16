@@ -28,3 +28,4 @@ liste_ball = []
 # Positions de la balle :
 ball_x = 0
 ball_y = 0
+cpt = 0

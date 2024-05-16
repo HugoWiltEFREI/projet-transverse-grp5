@@ -208,7 +208,7 @@ def game():
 
 
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(360)
 
 
 pygame.mixer.music.load(liste_music[model.level - 1])
