@@ -125,7 +125,7 @@ def forward_lvl():
 
 
 def create_ball(liste, vX, vY):
-    liste.append({"vx": vX, "vy": vY, "time": model.now, "rect": False})
+    liste.append({"vx": vX, "vy": vY, "rebond_count": 0, "rect": False, "rect_collision": None})
 
 
 def lancer_ball(liste, ball_image, list_tiles):
@@ -134,41 +134,71 @@ def lancer_ball(liste, ball_image, list_tiles):
             ball["rect"] = ball_image.get_rect()
             ball["rect"].left = player_rect.left
             ball["rect"].bottom = player_rect.bottom
-        if (model.now - ball["time"]) < 2000:
+            ball["rect_collision"] = pygame.Rect(0, 0, 21, 21)
+
+        if ball["rebond_count"] < 5:
             # pygame.draw.circle(display, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]),model.BALL_RADIUS)
             ball["rect"].left += ball["vx"] * model.temps
             ball["rect"].bottom += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
+
+            pygame.draw.rect(display, "purple", ball["rect_collision"])
+            print("purple : ", ball["rect_collision"].x, ball["rect_collision"].y)
+
+            ball["rect_collision"].left = ball["rect"].left + (ball["vx"] + model.gravite * model.temps) * model.temps
+            ball["rect_collision"].bottom = ball["rect"].bottom + (
+                    (ball["vy"] + model.gravite * model.temps) * model.temps) + (
+                                                    0.5 * model.gravite * model.temps ** 2)
+
             # display.blit(ball_image, (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]))
             display.blit(ball_image, (ball["rect"].x - scroll[0], ball["rect"].y - scroll[1]))
+            """
             pygame.draw.rect(display, "red", ball["rect"], 2)
+            print("red : ", ball["rect"].x, ball["rect"].y)
+            pygame.draw.rect(display, "orange", ball["rect_collision"])
+            print("orange : ", ball["rect_collision"].x, ball["rect_collision"].y)"""
 
-            hit_list_ball = collision_test(ball["rect"], list_tiles)
+            for tile in list_tiles:
+                pygame.draw.rect(display, "black", tile[0], 2)
+
+            hit_list_ball = collision_test(ball["rect_collision"], list_tiles)
             for tile in hit_list_ball:
-                if ball["rect"].right > tile[0].left and ball["rect"].left < tile[0].left:
-                    ball["x"] = tile[0].left
-                elif ball["rect"].left < tile[0].right and ball["rect"].right > tile[0].right:
-                    ball["x"] = tile[0].right
 
-                elif ball["rect"].bottom > tile[0].top:
+                test_right = abs(ball["rect"].right - tile[0].x)
+                test_left = abs(ball["rect"].left - tile[0].x)
+                test_bottom = abs(ball["rect"].bottom - tile[0].y)
+                test_top = abs(ball["rect"].top - tile[0].y)
+
+                if min(test_right, test_left) < min(test_top, test_bottom):
+                    if test_right < test_left:
+                        result = "right"
+                    elif test_left < test_right:
+                        result = "left"
+                else:
+                    if test_bottom < test_top:
+                        result = "bottom"
+                    elif test_top < test_bottom:
+                        result = "top"
+
+                if ball["rect_collision"].bottom > tile[0].top:
                     ball["rect"].bottom = tile[0].top
                     ball["vy"] = -ball["vy"] * 0.9
-                elif ball["rect"].top < tile[0].bottom - 21:
-                    ball["rect"].top = tile[0].bottom - 21
+                    ball["rebond_count"] += 1
+
+
+                elif ball["rect_collision"].top < tile[0].bottom:
+                    ball["rect"].top = tile[0].bottom
                     ball["vy"] = -ball["vy"] * 1.2
-                print(ball["rect"].bottom > tile[0].top)
+                    # ball["rebond_count"] += 1
+
+                elif ball["rect_collision"].right > tile[0].left:
+                    ball["rect"].right = tile[0].left
+                    ball["rebond_count"] = 5
+
+                elif ball["rect_collision"].left < tile[0].right:
+                    ball["rect"].left = tile[0].right
+                    ball["rebond_count"] = 5
+                    #"""
 
                 pygame.draw.rect(display, "magenta", tile[0], 2)
-            print(hit_list_ball)
-
-            """
-            for tile in hit_list:
-                if movement[1] > 0:
-                    rect.bottom = tile[0].top
-                    collision_types['bottom'] = True
-                elif movement[1] < 0:
-                    rect.top = tile[0].bottom
-                    collision_types['top'] = True
-                collisionPortal(tile)
-            return rect, collision_types"""
 
             ball["vy"] += model.gravite * model.temps
