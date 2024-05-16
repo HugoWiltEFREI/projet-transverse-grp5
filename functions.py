@@ -125,7 +125,7 @@ def forward_lvl():
 
 
 def create_ball(liste, vX, vY):
-    liste.append({"vx": vX, "vy": vY, "rebond_count": 0, "rect": False})
+    liste.append({"vx": vX, "vy": vY, "rebond_count": 0, "rect": False, "time": None})
 
 
 def lancer_ball(liste, ball_image, list_tiles):
@@ -135,9 +135,10 @@ def lancer_ball(liste, ball_image, list_tiles):
             ball["rect"].left = player_rect.left
             ball["rect"].bottom = player_rect.bottom
             ball["rect_collision"] = pygame.Rect(0, 0, 21, 21)
+            ball["time"] = model.now
 
 
-        if ball["rebond_count"] < 5:
+        if model.now - ball["time"] < 2000:
             # pygame.draw.circle(display, "red", (round(ball["x"]) - scroll[0], round(ball["y"]) - scroll[1]),model.BALL_RADIUS)
             ball["rect"].left += ball["vx"] * model.temps
             ball["rect"].bottom += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
@@ -183,53 +184,18 @@ def lancer_ball(liste, ball_image, list_tiles):
 
                 elif tile[0].collidepoint(rect_final_y.x, rect_final_y.top):
                     ball["rect"].bottom = tile[0].bottom
-                    ball["vy"] = -ball["vy"] * 1.5
+                    ball["vy"] = -ball["vy"] * 1.3
 
                 elif tile[0].collidepoint(rect_final_x.right, rect_final_x.y):
-                    ball["rebond_count"] = 5
+                    ball["time"] = 2000
 
                 elif tile[0].collidepoint(rect_final_x.left, rect_final_x.y):
-                    ball["rebond_count"] = 5
+                    ball["time"] = 2000
 
-                """
-
-                test_right = abs(ball["rect"].right - tile[0].x)
-                test_left = abs(ball["rect"].left - tile[0].x)
-                test_bottom = abs(ball["rect"].bottom - tile[0].y)
-                test_top = abs(ball["rect"].top - tile[0].y)
-
-                if min(test_right, test_left) < min(test_top, test_bottom):
-                    if test_right < test_left:
-                        result = "right"
-                    elif test_left < test_right:
-                        result = "left"
-                else:
-                    if test_bottom < test_top:
-                        result = "bottom"
-                    elif test_top < test_bottom:
-                        result = "top"
-
-                if ball["rect_collision"].bottom > tile[0].top:
-                    ball["rect"].bottom = tile[0].top
-                    ball["vy"] = -ball["vy"] * 0.9
-                    ball["rebond_count"] += 1
-
-
-                elif ball["rect_collision"].top < tile[0].bottom:
-                    ball["rect"].top = tile[0].bottom
-                    ball["vy"] = -ball["vy"] * 1.2
-                    # ball["rebond_count"] += 1
-
-                elif ball["rect_collision"].right > tile[0].left:
-                    ball["rect"].right = tile[0].left
-                    ball["rebond_count"] = 5
-
-                elif ball["rect_collision"].left < tile[0].right:
-                    ball["rect"].left = tile[0].right
-                    ball["rebond_count"] = 5
-                    #"""
 
                 pygame.draw.rect(display, "magenta", tile[0], 2)
+
+                print(ball["time"])
 
             ball["vy"] += model.gravite * model.temps
         print(model.cpt)
