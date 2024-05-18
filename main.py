@@ -43,7 +43,7 @@ tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd':
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
-player_img = pygame.image.load('textures/spritesheet3.png')
+player_img = pygame.image.load('textures/spritesheet4.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
 
@@ -63,26 +63,35 @@ animation_list_walk = []
 animation_list_jump = []
 animation_list_inert = []
 animation_list = []
-animation_speed_divisor = 5
+animation_speed_divisor = 10
 animation_counter = 0
 
-animation_step = 8
 last_update = pygame.time.get_ticks()
-animation_cooldown = 1
+animation_cooldown = 10
 
-sprite_sheet_image = player_img = pygame.image.load('textures/spritesheet3.png').convert_alpha()
+sprite_sheet_image = player_img = pygame.image.load('textures/spritesheet4.png').convert_alpha()
 sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
 
-for i in range(animation_step): #pour la marche
-    animation_list_walk.append(sprite_sheet.get_image(i, 64, 64, 1, black, 576))
+for i in range(model.animation_step):  # pour la marche
+    image = sprite_sheet.get_image(i, 64, 64, 1, black, 576)
+    if image is not None:
+        animation_list_walk.append(image)
+    else:
+        print(f"Erreur lors du chargement de l'image de marche à l'indice {i}")
 
-for j in range(animation_step): # pour le saut
-    animation_list_jump.append(sprite_sheet.get_image(j, 64, 64, 1, black, 64))
+for j in range(model.animation_step):  # pour le saut
+    image = sprite_sheet.get_image(j, 64, 64, 1, black, 64)
+    if image is not None:
+        animation_list_jump.append(image)
+    else:
+        print(f"Erreur lors du chargement de l'image de saut à l'indice {j}")
 
-for k in range(animation_step): # pour le stationaire
-    animation_list_inert.append(sprite_sheet.get_image(k, 64, 64, 1, black, 896))
-
-
+for k in range(model.animation_step):  # pour le stationaire
+    image = sprite_sheet.get_image(k, 64, 64, 1, black, 896)
+    if image is not None:
+        animation_list_inert.append(image)
+    else:
+        print(f"Erreur lors du chargement de l'image stationaire à l'indice {k}")
 
 def event_manager():
     global x, y
@@ -166,7 +175,7 @@ def game():
         if animation_counter >= animation_speed_divisor:
             model.frame += 1
             animation_counter = 0
-            if model.frame >= animation_step:
+            if model.frame >= model.animation_step:
                 model.frame = 0
 
     # MOVEMENT OF THE PLAYER
@@ -224,9 +233,11 @@ def game():
     model.zone_de_text = "speedY={}".format(model.speedY)
 
     if animation_list == animation_list_inert:
-        model.balls = 7
-    elif animation_list == animation_list_walk or animation_list == animation_list_jump:
-        model.balls = 8
+        model.animation_step = 4
+    elif animation_list == animation_list_walk:
+        model.animation_step = 8
+    elif animation_list == animation_list_jump:
+        model.animation_step = 5
     # Affichage du joueur
     if model.player_velocity_multi == 1:
         if not model.stay_right:

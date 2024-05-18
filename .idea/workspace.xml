@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a763901e-773b-48f7-af2a-e07713d43635" name="Changes" comment="toutes les animations sauf le sauf">
-      <change afterPath="$PROJECT_DIR$/textures/spritesheet3.png" afterDir="false" />
+    <list default="true" id="a763901e-773b-48f7-af2a-e07713d43635" name="Changes" comment="toutes les animations">
+      <change afterPath="$PROJECT_DIR$/textures/spritesheet4.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
@@ -118,7 +118,8 @@
       <workItem from="1715876026331" duration="24000" />
       <workItem from="1715947772051" duration="157000" />
       <workItem from="1715966493274" duration="659000" />
-      <workItem from="1716034616248" duration="2538000" />
+      <workItem from="1716034616248" duration="6255000" />
+      <workItem from="1716043849875" duration="602000" />
     </task>
     <task id="LOCAL-00001" summary="aretha franklin">
       <option name="closed" value="true" />
@@ -168,7 +169,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715796403910</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="toutes les animations">
+      <option name="closed" value="true" />
+      <created>1716038658596</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1716038658596</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -182,11 +191,12 @@
     <MESSAGE value="anim de marche en permanence &#10;+pas oublier de rajouter donna lee.wav et modif truc music&#10;+changer le sprite pour mexicain" />
     <MESSAGE value="anim de marche en permanence&#10;pas oublier de rajouter donna lee.wav et modif truc music" />
     <MESSAGE value="toutes les animations sauf le sauf" />
-    <option name="LAST_COMMIT_MESSAGE" value="toutes les animations sauf le sauf" />
+    <MESSAGE value="toutes les animations" />
+    <option name="LAST_COMMIT_MESSAGE" value="toutes les animations" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/projet_trans_encore$functions.coverage" NAME="functions Coverage Results" MODIFIED="1715084615911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/projet_trans_encore$main.coverage" NAME="main Coverage Results" MODIFIED="1716038320062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/projet_trans_encore$main.coverage" NAME="main Coverage Results" MODIFIED="1716042061307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/projet_trans_encore$model.coverage" NAME="model Coverage Results" MODIFIED="1715682735690" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/projet_trans_encore$ball.coverage" NAME="ball Coverage Results" MODIFIED="1715084618094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
