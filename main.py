@@ -11,16 +11,12 @@ from menu import menu
 pygame.init()
 clock = pygame.time.Clock()
 
-pygame.display.set_caption('Game')
+pygame.display.set_caption('M.A.R.I.O.')
 game_font = pygame.font.Font("VT323-Regular.ttf", int(100))
 text = game_font.render("PRESS E", False, "brown")
-coucou = game_font.render("COUCOU", False, "brown")
 zone_de_text = ""
-
 moving_right = False
 moving_left = False
-# For the pygame.transform.flip(player_img, 1, 0)
-
 stay_right = True
 momentum = 0
 air_timer = 0
