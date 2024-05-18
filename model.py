@@ -37,5 +37,6 @@ liste_ball = []
 ball_x = 0
 ball_y = 0
 frame = 0
+balls = 8
 x=0
 i=0
