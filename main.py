@@ -24,7 +24,7 @@ air_timer = 0
 jumpSound = pygame.mixer.Sound("musics/maro-jump-sound-effect_1.mp3")
 deathSound = pygame.mixer.Sound("musics/minecraft_hit_soundmp3converter.mp3")
 liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
-               "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav"]
+               "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav","musics/Rose-Royce-Car-Wash-_1976_.wav"]
 grassimage = pygame.image.load("textures/grassMid.png")
 grasscenter = pygame.image.load("textures/grassCenter.png")
 bow = pygame.image.load("textures/bow.png")
@@ -136,7 +136,10 @@ def game():
                 display.blit(tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
-                tile_rects.append((pygame.Rect(x * 64, y * 64, 64, 64), symbol))
+                if symbol == "b":
+                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, True, x, y])
+                else:
+                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, None])
             x += 1
         y += 1
 
@@ -205,7 +208,6 @@ def game():
     if model.display_dead != 0:
         screen.blit(text2, (400, 100))
     life_left()
-
 
     pygame.display.update()
     clock.tick(360)
