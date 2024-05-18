@@ -24,7 +24,8 @@ air_timer = 0
 jumpSound = pygame.mixer.Sound("musics/maro-jump-sound-effect_1.mp3")
 deathSound = pygame.mixer.Sound("musics/minecraft_hit_soundmp3converter.mp3")
 liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav", "musics/Undertale_Chill.wav",
-               "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav","musics/Rose-Royce-Car-Wash-_1976_.wav"]
+               "musics/Rick Astley - Never Gonna Give You Up (Official Music Video).wav",
+               "musics/Rose-Royce-Car-Wash-_1976_.wav"]
 grassimage = pygame.image.load("textures/grassMid.png")
 grasscenter = pygame.image.load("textures/grassCenter.png")
 bow = pygame.image.load("textures/bow.png")
@@ -35,7 +36,8 @@ portal_entrance = pygame.image.load("textures/entrance_portal.png")
 portal_exit = pygame.image.load("textures/exit_portal.png")
 ball_image = pygame.image.load("textures/ball_png.png")
 
-tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit}
+tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit,
+      'a': grasscenter}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
@@ -103,7 +105,7 @@ def event_manager():
                     model.momentum = 10
                     model.falling.pop(0)
                     model.falling.append(1)
-            if event.key == K_h:
+            if event.key == K_h and model.display_dead != 1:
                 model.ball_cpt += 1
                 if not (model.stay_right):
                     create_ball(model.liste_ball, -vitesseInitialeX, vitesseInitialeY)
@@ -131,15 +133,16 @@ def game():
     for line_of_symbols in select_map(model.level):
         x = 0
         for symbol in line_of_symbols:
-            if symbol in tl:
-                # Blit des images avec coords
-                display.blit(tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
+            if symbol in tl :
+                if (y, x) not in model.list_broken:
+                    # Blit des images avec coords
+                    display.blit(tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
-                if symbol == "b":
-                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, True, x, y])
+                if (y, x) in model.list_broken:
+                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, y, x])
                 else:
-                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, None])
+                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, y, x])
             x += 1
         y += 1
 

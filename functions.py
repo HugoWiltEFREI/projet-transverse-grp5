@@ -16,13 +16,14 @@ def is_dead(event):
             player_rect.y = 10
             model.player_velocity_multi = 1
             scroll[0], scroll[1] = 0, 0
+            model.list_broken = []
 
 
 def collision_test(rect, tiles):
     # Return le rect en collision avec le player
     hit_list = []
     for tile in tiles:
-        if rect.colliderect(tile[0]):
+        if rect.colliderect(tile[0]) and (tile[2],tile[3]) not in model.list_broken:
             hit_list.append(tile)
     return hit_list
 
@@ -137,13 +138,14 @@ def lancer_ball(liste, ball_image, list_tiles):
             ball["rect_collision"] = pygame.Rect(0, 0, 21, 21)
             ball["time"] = model.now
 
-
         if model.now - ball["time"] < 2000:
             ball["rect"].left += ball["vx"] * model.temps
             ball["rect"].bottom += (ball["vy"] * model.temps) + (0.5 * model.gravite * model.temps ** 2)
 
             ball["rect_collision"].left = ball["rect"].left + (ball["vx"] + model.gravite * model.temps) * model.temps
-            ball["rect_collision"].bottom = ball["rect"].bottom + ((ball["vy"] + model.gravite * model.temps) * model.temps) + (0.5 * model.gravite * model.temps ** 2)
+            ball["rect_collision"].bottom = ball["rect"].bottom + (
+                    (ball["vy"] + model.gravite * model.temps) * model.temps) + (
+                                                    0.5 * model.gravite * model.temps ** 2)
 
             rect_final_y = pygame.Rect(ball["rect"].x, 0, 21, abs(ball["rect_collision"].y - ball["rect"].y))
             rect_final_y.top = ball["rect"].top
@@ -155,9 +157,8 @@ def lancer_ball(liste, ball_image, list_tiles):
             rect_final_x.right = ball["rect_collision"].right
             pygame.draw.rect(display, "yellow", rect_final_x)
 
-
             display.blit(ball_image, (round(ball["rect"].x) - scroll[0], round(ball["rect"].y) - scroll[1]))
-            #display.blit(ball_image, (ball["rect"].x - scroll[0], ball["rect"].y - scroll[1]))
+            # display.blit(ball_image, (ball["rect"].x - scroll[0], ball["rect"].y - scroll[1]))
 
             for tile in list_tiles:
                 pygame.draw.rect(display, "black", tile[0], 2)
@@ -180,17 +181,8 @@ def lancer_ball(liste, ball_image, list_tiles):
                 elif tile[0].collidepoint(rect_final_x.left, rect_final_x.y):
                     ball["time"] = 2000
 
-                if tile[1] == "b":
-                    pygame.draw.rect(display, "red", pygame.Rect(10, 10, tile[3], tile[4]), 2)
-                    tile[2] = False
-                    #print(select_map(model.level)[1][0])
-                    select_map(model.level)[tile[3]][tile[4]] = "-"
-
-
-
-
-                pygame.draw.rect(display, "magenta", tile[0], 2)
-
+                if tile[1] in model.list_symbol_breakable:
+                    model.list_broken.append((tile[2], tile[3]))
 
             ball["vy"] += model.gravite * model.temps
         print(model.cpt)
