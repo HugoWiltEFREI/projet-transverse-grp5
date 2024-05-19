@@ -18,6 +18,7 @@ def is_dead(event):
             model.player_velocity_multi = 1
             scroll[0], scroll[1] = 0, 0
 
+
 def collision_test(rect, tiles):
     # Return le rect en collision avec le player
     hit_list = []
@@ -25,6 +26,7 @@ def collision_test(rect, tiles):
         if rect.colliderect(tile[0]):
             hit_list.append(tile)
     return hit_list
+
 
 def move(rect, movement, tiles):
     collision_types = {
@@ -152,7 +154,6 @@ def lancer_ball(liste, ball_image, list_tiles):
 
             display.blit(ball_image, (round(ball["rect"].x) - scroll[0], round(ball["rect"].y) - scroll[1]))
             # display.blit(ball_image, (ball["rect"].x - scroll[0], ball["rect"].y - scroll[1]))
-
 
             hit_list_ball = collision_test(ball["rect_collision"], list_tiles)
             for tile in hit_list_ball:
