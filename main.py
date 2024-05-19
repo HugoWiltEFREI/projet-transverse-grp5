@@ -1,4 +1,5 @@
 import math
+from random import randint
 
 import pygame.mixer
 from pygame.locals import *
@@ -38,6 +39,14 @@ bluegrassMid = pygame.image.load("textures/grassMiddleBlue.png")
 darkBlock = pygame.image.load("textures/texture mario underground.png")
 portal_entrance = pygame.image.load("textures/entrance_portal.png")
 portal_exit = pygame.image.load("textures/exit_portal.png")
+cloud1 = pygame.image.load("textures/Split_document/Cloud1.png")
+cloud2 = pygame.image.load("textures/Split_document/Cloud2.png")
+cloud3 = pygame.image.load("textures/Split_document/Cloud3.png")
+cloud4 = pygame.image.load("textures/Split_document/Cloud4.png")
+cloud5 = pygame.image.load("textures/Split_document/Cloud5.png")
+cloud6 = pygame.image.load("textures/Split_document/Cloud6.png")
+clouds = [cloud1, cloud2, cloud3, cloud4, cloud5, cloud6]
+star = pygame.image.load("textures/star.png")
 box = pygame.image.load("textures/boxEmpty.png")
 ball_image = pygame.image.load("textures/ball.png")
 
@@ -90,6 +99,18 @@ for k in range(model.animation_step):  # pour le stationaire
         animation_list_inert.append(image)
     else:
         print(f"Erreur lors du chargement de l'image stationaire à l'indice {k}")
+
+
+
+list_cloud_x = []
+liste_cloud_y = []
+
+for i in range(40):
+    list_cloud_x.append(randint(100, 400) + 100 * i)
+    liste_cloud_y.append(randint(100, 250))
+
+star_coords = (randint(1000, 1500), randint(100, 200))
+
 
 def event_manager():
     global x, y
@@ -154,6 +175,13 @@ def event_manager():
 def game():
     global y, x, player_rect, statut, animation_counter, last_update
     display.fill((146, 244, 255))
+    model.cloud_time += 1
+    for i in range(len(list_cloud_x)):
+        display.blit(clouds[(i % 5) + 1], (list_cloud_x[i] - model.cloud_time, liste_cloud_y[i]))
+    if model.cloud_time > 250:
+        model.star_time += 1
+        display.blit(star, (star_coords[0] - model.star_time * 50, star_coords[1] + model.star_time * 10))
+
     if player_rect.x > 950:
         scroll[0] = player_rect.x - 950
     if player_rect.y < 150:
