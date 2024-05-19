@@ -139,9 +139,7 @@ def game():
                     display.blit(tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
-                if (y, x) in model.list_broken:
-                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, y, x])
-                else:
+                if (y, x) not in model.list_broken:
                     tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, y, x])
             x += 1
         y += 1
