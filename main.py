@@ -33,9 +33,10 @@ bluegrassMid = pygame.image.load("textures/grassMiddleBlue.png")
 darkBlock = pygame.image.load("textures/texture mario underground.png")
 portal_entrance = pygame.image.load("textures/entrance_portal.png")
 portal_exit = pygame.image.load("textures/exit_portal.png")
+box = pygame.image.load("textures/boxEmpty.png")
 ball_image = pygame.image.load("textures/ball.png")
 
-tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit, 'a':grassimage}
+tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit, 'a':box}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
@@ -130,9 +131,7 @@ def game():
                     display.blit(tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
-                if (y, x) in model.list_broken:
-                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, y, x])
-                else:
+                if (y, x) not in model.list_broken:
                     tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, y, x])
             x += 1
         y += 1

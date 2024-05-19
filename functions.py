@@ -145,18 +145,14 @@ def lancer_ball(liste, ball_image, list_tiles):
             rect_final_y = pygame.Rect(ball["rect"].x, 0, 21, abs(ball["rect_collision"].y - ball["rect"].y))
             rect_final_y.top = ball["rect"].top
             rect_final_y.bottom = ball["rect_collision"].bottom
-            pygame.draw.rect(display, "green", rect_final_y)
 
             rect_final_x = pygame.Rect(0, ball["rect"].y, abs(ball["rect_collision"].x - ball["rect"].x), 21)
             rect_final_x.left = ball["rect"].left
             rect_final_x.right = ball["rect_collision"].right
-            pygame.draw.rect(display, "yellow", rect_final_x)
 
             display.blit(ball_image, (round(ball["rect"].x) - scroll[0], round(ball["rect"].y) - scroll[1]))
             # display.blit(ball_image, (ball["rect"].x - scroll[0], ball["rect"].y - scroll[1]))
 
-            for tile in list_tiles:
-                pygame.draw.rect(display, "black", tile[0], 2)
 
             hit_list_ball = collision_test(ball["rect_collision"], list_tiles)
             for tile in hit_list_ball:
@@ -180,4 +176,3 @@ def lancer_ball(liste, ball_image, list_tiles):
                     model.list_broken.append((tile[2], tile[3]))
 
             ball["vy"] += model.gravite * model.temps
-        print(model.cpt)
