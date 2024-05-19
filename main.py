@@ -33,7 +33,7 @@ liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Vid
 
 grassimage = pygame.image.load("textures/grassMid.png")
 grasscenter = pygame.image.load("textures/grassCenter.png")
-bow = pygame.image.load("textures/bow.png")
+bow = pygame.image.load("textures/ball.png")
 bluegrass = pygame.image.load("textures/grassCenterBlue.png")
 bluegrassMid = pygame.image.load("textures/grassMiddleBlue.png")
 darkBlock = pygame.image.load("textures/texture mario underground.png")
