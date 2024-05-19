@@ -10,8 +10,8 @@ moving_right = False
 moving_left = False
 stay_right = True
 speedX = 6
-speedY = 0 #speedY actuel
-fallSpeedX = 0 #speedX actuel
+speedY = 0  # speedY actuel
+fallSpeedX = 0  # speedX actuel
 now = 0
 level = 1
 derniereaction = 0
@@ -20,8 +20,6 @@ falling = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 val_sound = 50
 val_music = 50
 is_running = True
-cloud_time = 0
-star_time = 0
 accX = 0.2
 accYp = 0.3
 accYn = 0.5
@@ -40,22 +38,15 @@ ball_x = 0
 ball_y = 0
 frame = 0
 frame2 = 8
-x=0
-i=0
+x = 0
+i = 0
 animation_step = 8
-
-# Variables de la balle
 cool_down = 0
-gravite = 9.81
-balle_lancee = False
-ball_cpt = 0
-temps = 0.5
-liste_ball = []
-# Positions de la balle :
-ball_x = 0
-ball_y = 0
 cpt = 0
 # liste des tiles cassés par la balle
 list_broken = []
-#liste des symboles de tuiles pouvant être cassées par la balle :
+# liste des symboles de tuiles pouvant être cassées par la balle :
 list_symbol_breakable = ["a"]
+
+cloud_time = 0
+star_time = 0
