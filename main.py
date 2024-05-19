@@ -1,5 +1,6 @@
 import pygame.mixer
 from pygame.locals import *
+import math
 
 from functions import *
 from menu import menu
@@ -33,14 +34,21 @@ bluegrassMid = pygame.image.load("textures/grassMiddleBlue.png")
 darkBlock = pygame.image.load("textures/texture mario underground.png")
 portal_entrance = pygame.image.load("textures/entrance_portal.png")
 portal_exit = pygame.image.load("textures/exit_portal.png")
+ball_image = pygame.image.load("textures/ball.png")
 
-tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit}
+tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit, 'a':grassimage}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
 player_img = pygame.image.load('textures/perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
+
+# Variables de la balle :
+v0 = 50
+angleRad = math.radians(50)
+vitesseInitialeX = v0 * math.cos(angleRad)
+vitesseInitialeY = -v0 * math.sin(angleRad)
 
 now = 0
 level = 1
@@ -89,11 +97,19 @@ def event_manager():
                     model.momentum = 10
                     model.falling.pop(0)
                     model.falling.append(1)
+            if event.key == K_h and model.display_dead != 1:
+                model.ball_cpt += 1
+                if not (model.stay_right):
+                    create_ball(model.liste_ball, -vitesseInitialeX, vitesseInitialeY)
+                else:
+                    create_ball(model.liste_ball, vitesseInitialeX, vitesseInitialeY)
         if event.type == KEYUP:
             if event.key == K_RIGHT or event.key == K_d:
                 model.moving_right = False
             if event.key == K_LEFT or event.key == K_q:
                 model.moving_left = False
+            if event.key == K_h:
+                model.balle_lancee = False
 
 
 def game():
@@ -109,13 +125,16 @@ def game():
     for line_of_symbols in select_map(model.level):
         x = 0
         for symbol in line_of_symbols:
-            if symbol in tl:
-                # Blit des images avec coords
-                display.blit(
-                    tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
+            if symbol in tl :
+                if (y, x) not in model.list_broken:
+                    # Blit des images avec coords
+                    display.blit(tl[symbol], (x * 64 - scroll[0], y * 64 - scroll[1]))
             # Hitboxs pour les images avec collisions
             if symbol != "-" and symbol != "O":
-                tile_rects.append((pygame.Rect(x * 64, y * 64, 64, 64), symbol))
+                if (y, x) in model.list_broken:
+                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, y, x])
+                else:
+                    tile_rects.append([pygame.Rect(x * 64, y * 64, 64, 64), symbol, y, x])
             x += 1
         y += 1
     spike_level(model.level)
@@ -150,6 +169,8 @@ def game():
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and model.affichage == 1:
         display.blit(text, (800, 875))
+
+    lancer_ball(model.liste_ball, ball_image, tile_rects)
 
     if model.level == 1:
         isinspike1 = isinzone(725, player_rect.x, 790, 490, player_rect.y + 30, 510)
