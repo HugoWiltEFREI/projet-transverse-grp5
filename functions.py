@@ -4,19 +4,12 @@ from pygame.locals import KEYDOWN, K_r
 import model
 from levels import game_map1, game_map2, game_map3
 
-display = pygame.Surface((1920, 1080))
-WINDOW_SIZE = (0, 0)
-screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
-heart = pygame.image.load("textures/hud_heartFull.png")
-spike = pygame.image.load("textures/spike.png")
-scroll = [0, 0]
-player_rect = pygame.Rect(25, 25, 30, 45)
-
 
 def is_dead(event):
     if model.number_of_life == 0:
         model.display_dead = 1
         model.player_velocity_multi = 0
+        model.list_broken = []
         if event.type == KEYDOWN and event.key == K_r:
             model.number_of_life = 3
             model.display_dead = 0
@@ -25,7 +18,6 @@ def is_dead(event):
             model.player_velocity_multi = 1
             scroll[0], scroll[1] = 0, 0
 
-
 def collision_test(rect, tiles):
     # Return le rect en collision avec le player
     hit_list = []
@@ -33,7 +25,6 @@ def collision_test(rect, tiles):
         if rect.colliderect(tile[0]):
             hit_list.append(tile)
     return hit_list
-
 
 def move(rect, movement, tiles):
     collision_types = {
@@ -115,6 +106,15 @@ def level_actions(level):
     spike_level(level)
 
 
+display = pygame.Surface((1920, 1080))
+WINDOW_SIZE = (0, 0)
+screen = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
+heart = pygame.image.load("textures/hud_heartFull.png")
+spike = pygame.image.load("textures/spike.png")
+scroll = [0, 0]
+player_rect = pygame.Rect(25, 25, 30, 40)
+
+
 def forward_lvl():
     model.level %= 3
     model.level += 1
@@ -175,4 +175,4 @@ def lancer_ball(liste, ball_image, list_tiles):
                 if tile[1] in model.list_symbol_breakable:
                     model.list_broken.append((tile[2], tile[3]))
 
-            ball["vy"] += model.gravite * model.temps
+            ball["vy"] += model.gravite * model.temps * model.temps
