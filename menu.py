@@ -125,7 +125,7 @@ def menu():
                 settings()
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element == zone_for_credits:
-                print("no")
+                credits()
 
             manager.process_events(event)
 
@@ -138,3 +138,41 @@ def menu():
             manager.draw_ui(screen)
 
         pygame.display.update()
+
+
+def credits():
+    background = pygame.image.load("textures/Menu-transformed.jpeg")
+    background = pygame.transform.scale_by(background, 0.63)
+    manager = pygame_gui.UIManager((int(1800), int(1800)), "other/settings.json")
+    text_back = pygame_gui.elements.UIButton(pygame.Rect((1440, 240), (150, 75)), "BACK>", manager)
+    text_font = pygame.font.Font("VT323-Regular.ttf", int(75))
+    text_credit = text_font.render(
+        "Jeu : Hugo\nReste : Hugo\nCharge de travail : \n-Hugo : 40h\n-Steed : 123h\n-Yiannis : pi/2h\n-Jules : -7h\n-Raphael : 1.6180339887498948482045868343656381177203091798057628621354486227h",
+        False, "lightblue")
+    clock = pygame.time.Clock()
+    is_running = True
+
+    while is_running:
+        time_delta = clock.tick(60) / 1000.0
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                is_running = False
+
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == text_back:
+                    is_running = False
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    is_running = False
+
+            manager.process_events(event)
+
+        manager.update(time_delta)
+        screen.blit(background, (0, -80))
+        screen.blit(text_credit, (330, 230))
+        manager.draw_ui(screen)
+        pygame.display.update()
+
+
+"Mieux vaut guérir que prévenir - Raphael"
