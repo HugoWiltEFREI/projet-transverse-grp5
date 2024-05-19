@@ -4,7 +4,6 @@ from random import randint
 import pygame.mixer
 from pygame.locals import *
 
-import model
 import spritesheet
 from functions import *
 from menu import menu
@@ -50,14 +49,21 @@ star = pygame.image.load("textures/star.png")
 box = pygame.image.load("textures/boxEmpty.png")
 ball_image = pygame.image.load("textures/ball.png")
 
-tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit, 'a':box}
+list_cloud_x = []
+liste_cloud_y = []
+for i in range(40):
+    list_cloud_x.append(randint(100, 400) + 100 * i)
+    liste_cloud_y.append(randint(100, 250))
+
+star_coords = (randint(1000, 1500), randint(100, 200))
+
+tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd': darkBlock, 's': portal_exit, 'a': box}
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
 player_img = pygame.image.load('textures/spritesheet4.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
-
 
 # Variables de la balle :
 v0 = 50
@@ -101,26 +107,14 @@ for k in range(model.animation_step):  # pour le stationaire
         print(f"Erreur lors du chargement de l'image stationaire à l'indice {k}")
 
 
-
-list_cloud_x = []
-liste_cloud_y = []
-
-for i in range(40):
-    list_cloud_x.append(randint(100, 400) + 100 * i)
-    liste_cloud_y.append(randint(100, 250))
-
-star_coords = (randint(1000, 1500), randint(100, 200))
-
-
 def event_manager():
-    global x, y
     for event in pygame.event.get():
         if event.type == QUIT:
             model.is_running = False
 
         if (event.type == KEYDOWN) and (statut == 1) and (model.affichage != 0):
             if event.key == K_e:
-                model.zone_de_text = "Bow acquired"
+                model.zone_de_text = "You can now use : Fireball"
                 model.affichage = 0
 
         if pygame.mouse.get_pressed()[0]:
@@ -148,7 +142,7 @@ def event_manager():
                 model.moving_left = True
                 model.stay_right = False
             if event.key == K_SPACE or event.key == K_UP or event.key == K_z:
-                animation_list = animation_list_jump
+
                 if 0 in model.falling:
                     jumpSound.set_volume(model.val_sound / 100)
                     jumpSound.play()
@@ -159,7 +153,7 @@ def event_manager():
             if event.key == K_h and model.display_dead != 1 and model.affichage == 0 and model.now - model.cool_down > 500:
                 model.cool_down = model.now
                 model.ball_cpt += 1
-                if not (model.stay_right):
+                if not model.stay_right:
                     create_ball(model.liste_ball, -vitesseInitialeX, vitesseInitialeY)
                 else:
                     create_ball(model.liste_ball, vitesseInitialeX, vitesseInitialeY)
@@ -172,8 +166,9 @@ def event_manager():
             if event.key == K_h:
                 model.balle_lancee = False
 
+
 def game():
-    global y, x, player_rect, statut, animation_counter, last_update
+    global y, x, player_rect, statut, animation_counter, last_update, animation_list
     display.fill((146, 244, 255))
     model.cloud_time += 1
     for i in range(len(list_cloud_x)):
@@ -266,9 +261,6 @@ def game():
     elif model.fallSpeedX == 0:
         animation_list = animation_list_inert
 
-    print(model.speedY)
-    model.zone_de_text = "speedY={}".format(model.speedY)
-
     if animation_list == animation_list_inert:
         model.animation_step = 4
     elif animation_list == animation_list_walk:
@@ -282,8 +274,6 @@ def game():
         else:
             display.blit(pygame.transform.flip(animation_list[model.frame], True, False),
                          (player_rect.x - scroll[0] - 15, player_rect.y - scroll[1] - 20))
-
-
 
     statut = isinzone(450, player_rect.x, 515, 455, player_rect.y, 515)
     if statut and model.affichage == 1:
@@ -310,7 +300,7 @@ def game():
 
     model.now = pygame.time.get_ticks()
     cpteur = game_font.render(str(model.zone_de_text), False, "brown")
-    diedFromVoid(player_rect.y)
+    died_from_void(player_rect.y)
     event_manager()
     screen.blit(pygame.transform.scale(display, (1920, 1080)), (0, 0))
     screen.blit(cpteur, (30, 30))
@@ -324,8 +314,10 @@ def game():
     pygame.display.update()
     clock.tick(60)
 
+
 pygame.mixer.music.load(liste_music[model.level - 1])
 pygame.mixer.music.play()
+
 
 def start():
     pygame.mixer.music.load(liste_music[model.level - 1])

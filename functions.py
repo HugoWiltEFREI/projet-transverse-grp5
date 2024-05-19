@@ -40,7 +40,7 @@ def move(rect, movement, tiles):
         elif movement[0] < 0:
             rect.left = tile[0].right
             collision_types['left'] = True
-        collisionPortal(tile)
+        collision_portal(tile)
 
     rect.y += movement[1]
     hit_list = collision_test(rect, tiles)
@@ -51,11 +51,11 @@ def move(rect, movement, tiles):
         elif movement[1] < 0:
             rect.top = tile[0].bottom
             collision_types['top'] = True
-        collisionPortal(tile)
+        collision_portal(tile)
     return rect, collision_types
 
 
-def collisionPortal(tile):
+def collision_portal(tile):
     if tile[1] == 's':
         forward_lvl()
         player_rect.x = 30
@@ -98,7 +98,7 @@ def select_map(level):
     return game_map
 
 
-def diedFromVoid(posY):
+def died_from_void(posY):
     if posY > 900:
         model.number_of_life = 0
         model.display_dead = 1
