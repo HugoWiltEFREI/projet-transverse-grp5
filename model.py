@@ -28,9 +28,10 @@ accYn = 0.5
 speedMaxX = 6
 jumpSpeed = 10
 frame = 0
-# balle
+momentum = 0
+
+# Variables de la balle
 gravite = 9.81
-BALL_RADIUS = 7
 balle_lancee = False
 ball_cpt = 0
 temps = 0.5
@@ -38,3 +39,8 @@ liste_ball = []
 # Positions de la balle :
 ball_x = 0
 ball_y = 0
+cpt = 0
+# liste des tiles cassés par la balle
+list_broken = []
+#liste des symboles de tuiles pouvant être cassées par la balle :
+list_symbol_breakable = ["a"]
