@@ -125,7 +125,7 @@ def menu():
                 settings()
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element == zone_for_credits:
-                credits()
+                credits_menu()
 
             manager.process_events(event)
 
@@ -140,7 +140,7 @@ def menu():
         pygame.display.update()
 
 
-def credits():
+def credits_menu():
     background = pygame.image.load("textures/Menu-transformed.jpeg")
     background = pygame.transform.scale_by(background, 0.63)
     manager = pygame_gui.UIManager((int(1800), int(1800)), "other/settings.json")
