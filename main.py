@@ -97,7 +97,8 @@ def event_manager():
                     model.momentum = 10
                     model.falling.pop(0)
                     model.falling.append(1)
-            if event.key == K_h and model.display_dead != 1 and model.affichage == 0:
+            if event.key == K_h and model.display_dead != 1 and model.affichage == 0 and model.now - model.cool_down > 500:
+                model.cool_down = model.now
                 model.ball_cpt += 1
                 if not (model.stay_right):
                     create_ball(model.liste_ball, -vitesseInitialeX, vitesseInitialeY)

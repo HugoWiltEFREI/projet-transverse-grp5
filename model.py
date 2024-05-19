@@ -31,6 +31,7 @@ frame = 0
 momentum = 0
 
 # Variables de la balle
+cool_down = 0
 gravite = 9.81
 balle_lancee = False
 ball_cpt = 0
