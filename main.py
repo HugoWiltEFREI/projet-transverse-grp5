@@ -32,7 +32,7 @@ liste_music = ["musics/Rick Astley - Never Gonna Give You Up (Official Music Vid
 
 grassimage = pygame.image.load("textures/grassMid.png")
 grasscenter = pygame.image.load("textures/grassCenter.png")
-bow = pygame.image.load("textures/bow.png")
+
 bluegrass = pygame.image.load("textures/grassCenterBlue.png")
 bluegrassMid = pygame.image.load("textures/grassMiddleBlue.png")
 darkBlock = pygame.image.load("textures/texture mario underground.png")
@@ -48,6 +48,7 @@ clouds = [cloud1, cloud2, cloud3, cloud4, cloud5, cloud6]
 star = pygame.image.load("textures/star.png")
 box = pygame.image.load("textures/boxEmpty.png")
 ball_image = pygame.image.load("textures/ball.png")
+ball_image.set_colorkey((0, 0, 0))
 
 list_cloud_x = []
 liste_cloud_y = []
@@ -63,7 +64,7 @@ text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
 player_img = pygame.image.load('textures/spritesheet4.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
-player_img.set_colorkey((255, 255, 255))
+player_img.set_colorkey((146, 244, 255))
 
 # Variables de la balle :
 v0 = 50
@@ -306,7 +307,7 @@ def game():
     screen.blit(cpteur, (30, 30))
     screen.blit(portal_entrance, (10 - scroll[0], 40 - scroll[1]))
     if model.affichage != 0:
-        screen.blit(bow, (465 - scroll[0], 465 - scroll[1]))
+        screen.blit(ball_image, (465 - scroll[0], 465 - scroll[1]))
     if model.display_dead != 0:
         screen.blit(text2, (400, 100))
     life_left()
