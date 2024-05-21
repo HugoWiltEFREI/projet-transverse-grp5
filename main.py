@@ -29,6 +29,8 @@ tl = {"o": grassimage, "x": grasscenter, "l": bluegrass, "b": bluegrassMid, 'd':
 game_font2 = pygame.font.Font("VT323-Regular.ttf", int(150))
 text2 = game_font2.render("PRESS R TO RESTART", False, "brown")
 
+
+
 player_img = pygame.image.load('textures/perso.png')
 player_img = pygame.transform.scale_by(player_img, 0.04)
 player_img.set_colorkey((255, 255, 255))
@@ -72,7 +74,7 @@ def event_manager():
                 if 0 in model.falling:
                     jumpSound.set_volume(model.val_sound / 100)
                     jumpSound.play()
-                    model.speedY = (7*model.jumpSpeed/10) + (3*model.jumpSpeed/10)*(abs(model.fallSpeedX)/model.speedMaxX)**5
+                    model.speedY = (7*model.jumpSpeed/10) + (3*model.jumpSpeed/10)*(abs(model.speedX)/model.speedMaxX)**5
                     model.falling.pop(0)
                     model.falling.append(1)
         if event.type == KEYUP:
@@ -107,27 +109,25 @@ def game():
     spike_level(model.level)
     # MOVEMENT OF THE PLAYER
     player_movement = [0, 0]
-    player_movement[0] += model.fallSpeedX
+    player_movement[0] += model.speedX
     if model.moving_right and (not model.moving_left):
-        model.fallSpeedX += model.accX
+        model.speedX += model.accX
     elif model.moving_left and (not model.moving_right):
-        model.fallSpeedX -= model.accX
+        model.speedX -= model.accX
     else:
         
-        if model.fallSpeedX > 0:
-            model.fallSpeedX -= model.accX
-            print("right speed reducing")
-            if model.fallSpeedX < 0:
-                model.fallSpeedX = 0
-        if model.fallSpeedX < 0:
-            model.fallSpeedX += model.accX
-            print("left speed reducing",model.fallSpeedX)
-            if model.fallSpeedX > 0:
-                model.fallSpeedX = 0
-    if model.fallSpeedX > model.speedMaxX:
-        model.fallSpeedX = model.speedMaxX
-    if model.fallSpeedX < -1*model.speedMaxX:
-        model.fallSpeedX = -1*model.speedMaxX
+        if model.speedX > 0:
+            model.speedX -= model.accX
+            if model.speedX < 0:
+                model.speedX = 0
+        if model.speedX < 0:
+            model.speedX += model.accX
+            if model.speedX > 0:
+                model.speedX = 0
+    if model.speedX > model.speedMaxX:
+        model.speedX = model.speedMaxX
+    if model.speedX < -1*model.speedMaxX:
+        model.speedX = -1*model.speedMaxX
 
     player_movement[1] -= model.speedY
     if model.falling[-1]:
@@ -145,10 +145,10 @@ def game():
         model.falling.pop(0)
     if collisions["top"]:
         model.speedY *= -1
-    if collisions["left"] and model.fallSpeedX < 0:
-        model.fallSpeedX = 0
-    if collisions["right"] and model.fallSpeedX > 0:
-        model.fallSpeedX = 0
+    if collisions["left"] and model.speedX < 0:
+        model.speedX = 0
+    if collisions["right"] and model.speedX > 0:
+        model.speedX = 0
     # Flip the player image when goes to the left
     if model.player_velocity_multi == 1:
         if model.stay_right:
@@ -208,6 +208,4 @@ def start():
             menu()
         else:
             game()
-
-
 start()

@@ -28,6 +28,8 @@ def collision_test(rect, tiles):
 
 
 def move(rect, movement, tiles):
+    print(rect.x)
+    wind(rect)
     collision_types = {
         'top': False, 'bottom': False, 'right': False, 'left': False}
     rect.x += movement[0]
@@ -52,6 +54,7 @@ def move(rect, movement, tiles):
             collision_types['top'] = True
         collisionPortal(tile)
     return rect, collision_types
+    
 
 
 def collisionPortal(tile):
@@ -61,7 +64,6 @@ def collisionPortal(tile):
         player_rect.y = 30
         scroll[0] = 0
         scroll[1] = 0
-
 
 def isinzone(x1, x2, x3, y1, y2, y3):
     if (x1 < x2 < x3) and (y1 < y2 < y3):
@@ -85,6 +87,9 @@ def spike_level(level):
         display.blit(spike, (1110 + 200 - scroll[0], 465 - scroll[1]))
         display.blit(spike, (875 + 200 - scroll[0], 465 - scroll[1]))
 
+def wind(player_rect):
+    if player_rect.x < (model.wind_range[model.level-1][1]) and player_rect.x > (model.wind_range[model.level-1][0]) and  not (0 in model.falling):
+        model.speedY += model.windForce
 
 def select_map(level):
     global game_map
@@ -104,8 +109,7 @@ def diedFromVoid(posY):
 
 
 def level_actions(level):
-    spike_level(level)
-
+    spike_level(level) 
 
 display = pygame.Surface((1920, 1080))
 WINDOW_SIZE = (0, 0)
